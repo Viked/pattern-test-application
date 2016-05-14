@@ -5,9 +5,9 @@ package com.example.patternapplication.model.db;
  */
 public class DBConstants {
 
-    public static final String DB_NAME = "weather_db";
+    public static final String DB_NAME = "weather.db";
     public static final int DB_VERSION = 1;
-    public static final String DB_TABLE = "db_table_1";
+    public static final String DB_TABLE = "db_table_weather";
 
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_COORD_LON = "coord_lon";

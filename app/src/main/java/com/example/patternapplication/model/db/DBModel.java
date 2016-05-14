@@ -119,8 +119,22 @@ public class DBModel {
 
                 Main main = new Main();
                 main.setHumidity(cursor.getInt(mainHumidityIndex));
-                main.set(cursor.getInt(mainHumidityIndex));
+                main.setPressure(cursor.getDouble(mainPressureIndex));
+                main.setTemp(cursor.getDouble(mainTempIndex));
+                main.setTempMax(cursor.getDouble(mainTempMaxIndex));
+                main.setTempMin(cursor.getDouble(mainTempMinIndex));
+                requestedWeather.setMain(main);
 
+                Wind wind = new Wind();
+                wind.setDeg(cursor.getDouble(windDegIndex));
+                wind.setSpeed(cursor.getDouble(windSpeedIndex));
+                requestedWeather.setWind(wind);
+
+                Sys sys = new Sys();
+                sys.setCountry(cursor.getString(sysCountryIndex));
+                sys.setSunset(cursor.getLong(sysSunsetIndex));
+                sys.setSunrise(cursor.getLong(sysSunriseIndex));
+                requestedWeather.setSys(sys);
 
                 Clouds clouds = new Clouds();
                 clouds.setAll(cursor.getLong(cloudsIndex));

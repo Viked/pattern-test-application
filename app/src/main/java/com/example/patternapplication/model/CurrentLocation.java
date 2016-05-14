@@ -28,8 +28,8 @@ public class CurrentLocation {
     private static final long MIN_TIME_BW_UPDATES = 1; // 1 minute
 
     public Observable<Location> getCurrentLocation(Activity context) {
+        LocationManager mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         PublishSubject<Location> locationPublishSubject = PublishSubject.create();
-
             final LocationListener mLocationListener = new LocationListener() {
                 @Override
                 public void onLocationChanged(final Location location) {
@@ -54,7 +54,7 @@ public class CurrentLocation {
 
                 }
             };
-            LocationManager mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+
 
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
                     ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -68,7 +68,8 @@ public class CurrentLocation {
                 locationPublishSubject.onError(new Exception());
             }
 
-        return locationPublishSubject.subscribeOn(Schedulers.newThread())
+        return locationPublishSubject.doAfterTerminate(()->mLocationManager.removeUpdates(mLocationListener))
+                .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread());
     }
 }

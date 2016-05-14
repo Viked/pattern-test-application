@@ -1,14 +1,24 @@
 
 package com.example.patternapplication.model.data;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.util.HashMap;
 import java.util.Map;
-
+@DatabaseTable
 public class Weather {
 
+    @DatabaseField(generatedId = true)
+    private int tableId;
+
+    @DatabaseField
     private Integer id = 0;
+    @DatabaseField
     private String main = "";
+    @DatabaseField
     private String description = "";
+    @DatabaseField
     private String icon = "";
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 

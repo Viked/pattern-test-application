@@ -1,12 +1,21 @@
 
 package com.example.patternapplication.model.data;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@DatabaseTable
 public class Coord {
 
+    @DatabaseField(generatedId = true)
+    private int id;
+
+    @DatabaseField
     private Double lon = 0.0;
+    @DatabaseField
     private Double lat = 0.0;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 

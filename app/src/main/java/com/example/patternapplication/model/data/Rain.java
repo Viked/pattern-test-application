@@ -1,11 +1,18 @@
 
 package com.example.patternapplication.model.data;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.util.HashMap;
 import java.util.Map;
-
+@DatabaseTable
 public class Rain {
 
+    @DatabaseField(generatedId = true)
+    private int id;
+
+    @DatabaseField
     private Long time = 0L;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 

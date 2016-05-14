@@ -1,13 +1,23 @@
 
 package com.example.patternapplication.model.data;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@DatabaseTable
 public class Sys {
 
+    @DatabaseField(generatedId = true)
+    private int id;
+
+    @DatabaseField
     private String country = "";
+    @DatabaseField
     private Long sunrise = 0L;
+    @DatabaseField
     private Long sunset = 0L;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
