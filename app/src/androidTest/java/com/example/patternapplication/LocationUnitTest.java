@@ -31,7 +31,7 @@ public class LocationUnitTest {
         location.getCurrentLocation(mActivityRule.getActivity())
                 .subscribe(testSubscriber);
         try {
-            Thread.sleep(360000);
+            Thread.sleep(120000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

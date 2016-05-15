@@ -1,12 +1,10 @@
 package com.example.patternapplication;
 
 import android.database.Cursor;
-import android.location.Location;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
-import com.example.patternapplication.model.CurrentLocation;
 import com.example.patternapplication.model.data.RequestedWeather;
 import com.example.patternapplication.model.db.DBModel;
 
@@ -15,8 +13,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import rx.observers.TestSubscriber;
 
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
@@ -59,7 +55,7 @@ public class DBUnitTest {
         model.addRec(weather);
         Cursor temp = model.getAllData();
         assertEquals(temp.getCount(), 1);
-        RequestedWeather gatedWeather = model.parseCursor(temp).get(0);
+        RequestedWeather gatedWeather = model.getDataList(temp).get(0);
         assertEquals(weather, gatedWeather);
         temp.close();
     }

@@ -10,6 +10,7 @@ public class DBConstants {
     public static final String DB_TABLE = "db_table_weather";
 
     public static final String COLUMN_ID = "_id";
+    public static final String COLUMN_TIME = "time";
     public static final String COLUMN_COORD_LON = "coord_lon";
     public static final String COLUMN_COORD_LAT = "coord_lat";
     public static final String COLUMN_WEATHER_ID = "weather_id";
@@ -38,6 +39,7 @@ public class DBConstants {
     public static final String DB_CREATE =
             "create table " + DB_TABLE + "(" +
                     COLUMN_ID + " integer primary key autoincrement, " +
+                    COLUMN_TIME + " real, " +
                     COLUMN_COORD_LON + " real, " +
                     COLUMN_COORD_LAT + " real, " +
                     COLUMN_WEATHER_ID + " integer, " +

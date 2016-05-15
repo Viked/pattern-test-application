@@ -9,18 +9,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.example.patternapplication.model.data.RequestedWeather;
-import com.example.patternapplication.model.db.DBModel;
-import com.example.patternapplication.presenter.Presenter;
-
-import java.util.List;
+import com.example.patternapplication.presenter.IPresenter;
+import com.example.patternapplication.presenter.PresenterImpl;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>{
 
-    TextView textView;
+    private GoogleApiClient apiClient;
+
+    private TextView textView;
 
     //open weather api key d45545a62ad42fe8a840303b8600c6d8
-    Presenter presenter = new Presenter();
+    IPresenter presenter = new PresenterImpl();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         textView = (TextView)findViewById(R.id.textView);
         presenter.onCreate(this);
         getSupportLoaderManager().initLoader(0, null, this);
+        
     }
 
     @Override
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-
+        presenter.DBLoaded(data);
     }
 
     @Override
@@ -52,21 +53,21 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new MyCursorLoader(this, presenter.getDbModel());
+        return new MyCursorLoader(this, presenter);
     }
 
     static class MyCursorLoader extends CursorLoader {
 
-        DBModel db;
+        IPresenter presenter;
 
-        public MyCursorLoader(Context context, DBModel db) {
+        public MyCursorLoader(Context context, IPresenter presenter) {
             super(context);
-            this.db = db;
+            this.presenter = presenter;
         }
 
         @Override
         public Cursor loadInBackground() {
-            return db.getAllData();
+            return presenter.loadDB();
         }
 
     }

@@ -14,6 +14,7 @@ import com.example.patternapplication.model.data.Weather;
 import com.example.patternapplication.model.data.Wind;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,21 +33,44 @@ public class DBModel {
         mCtx = ctx;
     }
 
-    // открыть подключение
+
+    private int timeIndex;
+    private int coordLonIndex;
+    private int coordLatIndex;
+    private int weatherIdIndex;
+    private int weatherMainIndex;
+    private int weatherDescriptionIndex;
+    private int weatherIconIndex;
+    private int mainTempIndex;
+    private int mainPressureIndex;
+    private int mainHumidityIndex;
+    private int mainTempMinIndex;
+    private int mainTempMaxIndex;
+    private int windSpeedIndex;
+    private int windDegIndex;
+    private int cloudsIndex;
+    private int dtIndex;
+    private int sysCountryIndex;
+    private int sysSunriseIndex;
+    private int sysSunsetIndex;
+    private int requestIdIndex;
+    private int nameIndex;
+    private int codeIndex;
+
+
     public void open() {
         mDBHelper = new DBHelper(mCtx, DBConstants.DB_NAME, null, DBConstants.DB_VERSION);
         mDB = mDBHelper.getWritableDatabase();
     }
 
-    // закрыть подключение
     public void close() {
         if (mDBHelper != null) mDBHelper.close();
     }
 
-    // получить все данные из таблицы DB_TABLE
     public Cursor getAllData() {
         String[] columns = {
                 DBConstants.COLUMN_ID,
+                DBConstants.COLUMN_TIME,
                 DBConstants.COLUMN_COORD_LON,
                 DBConstants.COLUMN_COORD_LAT,
                 DBConstants.COLUMN_WEATHER_ID,
@@ -69,88 +93,103 @@ public class DBModel {
                 DBConstants.COLUMN_NAME,
                 DBConstants.COLUMN_COD
         };
-        return mDB.query(DBConstants.DB_TABLE, columns,
+        Cursor cursor = mDB.query(DBConstants.DB_TABLE, columns,
                 null, null, null, null, null);
+
+        timeIndex = cursor.getColumnIndex(DBConstants.COLUMN_TIME);
+        coordLonIndex = cursor.getColumnIndex(DBConstants.COLUMN_COORD_LON);
+        coordLatIndex = cursor.getColumnIndex(DBConstants.COLUMN_COORD_LAT);
+        weatherIdIndex = cursor.getColumnIndex(DBConstants.COLUMN_WEATHER_ID);
+        weatherMainIndex = cursor.getColumnIndex(DBConstants.COLUMN_WEATHER_MAIN);
+        weatherDescriptionIndex = cursor.getColumnIndex(DBConstants.COLUMN_WEATHER_DESCRIPTION);
+        weatherIconIndex = cursor.getColumnIndex(DBConstants.COLUMN_WEATHER_ICON);
+        mainTempIndex = cursor.getColumnIndex(DBConstants.COLUMN_MAIN_TEMP);
+        mainPressureIndex = cursor.getColumnIndex(DBConstants.COLUMN_MAIN_PRESSURE);
+        mainHumidityIndex = cursor.getColumnIndex(DBConstants.COLUMN_MAIN_HUMIDITY);
+        mainTempMinIndex = cursor.getColumnIndex(DBConstants.COLUMN_MAIN_TEMP_MIN);
+        mainTempMaxIndex = cursor.getColumnIndex(DBConstants.COLUMN_MAIN_TEMP_MAX);
+        windSpeedIndex = cursor.getColumnIndex(DBConstants.COLUMN_WIND_SPEED);
+        windDegIndex = cursor.getColumnIndex(DBConstants.COLUMN_WIND_DEG);
+        cloudsIndex = cursor.getColumnIndex(DBConstants.COLUMN_CLOUDS);
+        dtIndex = cursor.getColumnIndex(DBConstants.COLUMN_DT);
+        sysCountryIndex = cursor.getColumnIndex(DBConstants.COLUMN_SYS_COUNTRY);
+        sysSunriseIndex = cursor.getColumnIndex(DBConstants.COLUMN_SYS_SUNRISE);
+        sysSunsetIndex = cursor.getColumnIndex(DBConstants.COLUMN_SYS_SUNSET);
+        requestIdIndex = cursor.getColumnIndex(DBConstants.COLUMN_REQUEST_ID);
+        nameIndex = cursor.getColumnIndex(DBConstants.COLUMN_NAME);
+        codeIndex = cursor.getColumnIndex(DBConstants.COLUMN_COD);
+
+        return cursor;
     }
 
-    public List<RequestedWeather> parseCursor(Cursor cursor) {
+    public RequestedWeather parseCursor(Cursor cursor) {
+        RequestedWeather requestedWeather = new RequestedWeather();
+        requestedWeather.setId(cursor.getLong(requestIdIndex));
+        requestedWeather.setName(cursor.getString(nameIndex));
+        requestedWeather.setCod(cursor.getLong(codeIndex));
+        requestedWeather.setDt(cursor.getLong(dtIndex));
+        requestedWeather.setTime(cursor.getLong(timeIndex));
+
+        Coord coord = new Coord();
+        coord.setLat(cursor.getDouble(coordLatIndex));
+        coord.setLon(cursor.getDouble(coordLonIndex));
+        requestedWeather.setCoord(coord);
+
+
+        Weather weather = new Weather();
+        weather.setDescription(cursor.getString(weatherDescriptionIndex));
+        weather.setIcon(cursor.getString(weatherIconIndex));
+        weather.setMain(cursor.getString(weatherMainIndex));
+        weather.setId(cursor.getInt(weatherIdIndex));
+        requestedWeather.getWeather().add(weather);
+
+        Main main = new Main();
+        main.setHumidity(cursor.getInt(mainHumidityIndex));
+        main.setPressure(cursor.getDouble(mainPressureIndex));
+        main.setTemp(cursor.getDouble(mainTempIndex));
+        main.setTempMax(cursor.getDouble(mainTempMaxIndex));
+        main.setTempMin(cursor.getDouble(mainTempMinIndex));
+        requestedWeather.setMain(main);
+
+        Wind wind = new Wind();
+        wind.setDeg(cursor.getDouble(windDegIndex));
+        wind.setSpeed(cursor.getDouble(windSpeedIndex));
+        requestedWeather.setWind(wind);
+
+        Sys sys = new Sys();
+        sys.setCountry(cursor.getString(sysCountryIndex));
+        sys.setSunset(cursor.getLong(sysSunsetIndex));
+        sys.setSunrise(cursor.getLong(sysSunriseIndex));
+        requestedWeather.setSys(sys);
+
+        Clouds clouds = new Clouds();
+        clouds.setAll(cursor.getLong(cloudsIndex));
+        requestedWeather.setClouds(clouds);
+
+        return requestedWeather;
+    }
+
+    public List<RequestedWeather> getDataList(Cursor cursor) {
         List<RequestedWeather> out = new ArrayList<>();
         if (cursor != null && cursor.getCount() > 0) {
-            int coordLonIndex = cursor.getColumnIndex(DBConstants.COLUMN_COORD_LON);
-            int coordLatIndex = cursor.getColumnIndex(DBConstants.COLUMN_COORD_LAT);
-            int weatherIdIndex = cursor.getColumnIndex(DBConstants.COLUMN_WEATHER_ID);
-            int weatherMainIndex = cursor.getColumnIndex(DBConstants.COLUMN_WEATHER_MAIN);
-            int weatherDescriptionIndex = cursor.getColumnIndex(DBConstants.COLUMN_WEATHER_DESCRIPTION);
-            int weatherIconIndex = cursor.getColumnIndex(DBConstants.COLUMN_WEATHER_ICON);
-            int mainTempIndex = cursor.getColumnIndex(DBConstants.COLUMN_MAIN_TEMP);
-            int mainPressureIndex = cursor.getColumnIndex(DBConstants.COLUMN_MAIN_PRESSURE);
-            int mainHumidityIndex = cursor.getColumnIndex(DBConstants.COLUMN_MAIN_HUMIDITY);
-            int mainTempMinIndex = cursor.getColumnIndex(DBConstants.COLUMN_MAIN_TEMP_MIN);
-            int mainTempMaxIndex = cursor.getColumnIndex(DBConstants.COLUMN_MAIN_TEMP_MAX);
-            int windSpeedIndex = cursor.getColumnIndex(DBConstants.COLUMN_WIND_SPEED);
-            int windDegIndex = cursor.getColumnIndex(DBConstants.COLUMN_WIND_DEG);
-            int cloudsIndex = cursor.getColumnIndex(DBConstants.COLUMN_CLOUDS);
-            int dtIndex = cursor.getColumnIndex(DBConstants.COLUMN_DT);
-            int sysCountryIndex = cursor.getColumnIndex(DBConstants.COLUMN_SYS_COUNTRY);
-            int sysSunriseIndex = cursor.getColumnIndex(DBConstants.COLUMN_SYS_SUNRISE);
-            int sysSunsetIndex = cursor.getColumnIndex(DBConstants.COLUMN_SYS_SUNSET);
-            int requestIdIndex = cursor.getColumnIndex(DBConstants.COLUMN_REQUEST_ID);
-            int nameIndex = cursor.getColumnIndex(DBConstants.COLUMN_NAME);
-            int codeIndex = cursor.getColumnIndex(DBConstants.COLUMN_COD);
             while (cursor.moveToNext()) {
-                RequestedWeather requestedWeather = new RequestedWeather();
-                requestedWeather.setId(cursor.getLong(requestIdIndex));
-                requestedWeather.setName(cursor.getString(nameIndex));
-                requestedWeather.setCod(cursor.getLong(codeIndex));
-                requestedWeather.setDt(cursor.getLong(dtIndex));
-
-                Coord coord = new Coord();
-                coord.setLat(cursor.getDouble(coordLatIndex));
-                coord.setLon(cursor.getDouble(coordLonIndex));
-                requestedWeather.setCoord(coord);
-
-
-                Weather weather = new Weather();
-                weather.setDescription(cursor.getString(weatherDescriptionIndex));
-                weather.setIcon(cursor.getString(weatherIconIndex));
-                weather.setMain(cursor.getString(weatherMainIndex));
-                weather.setId(cursor.getInt(weatherIdIndex));
-                requestedWeather.getWeather().add(weather);
-
-                Main main = new Main();
-                main.setHumidity(cursor.getInt(mainHumidityIndex));
-                main.setPressure(cursor.getDouble(mainPressureIndex));
-                main.setTemp(cursor.getDouble(mainTempIndex));
-                main.setTempMax(cursor.getDouble(mainTempMaxIndex));
-                main.setTempMin(cursor.getDouble(mainTempMinIndex));
-                requestedWeather.setMain(main);
-
-                Wind wind = new Wind();
-                wind.setDeg(cursor.getDouble(windDegIndex));
-                wind.setSpeed(cursor.getDouble(windSpeedIndex));
-                requestedWeather.setWind(wind);
-
-                Sys sys = new Sys();
-                sys.setCountry(cursor.getString(sysCountryIndex));
-                sys.setSunset(cursor.getLong(sysSunsetIndex));
-                sys.setSunrise(cursor.getLong(sysSunriseIndex));
-                requestedWeather.setSys(sys);
-
-                Clouds clouds = new Clouds();
-                clouds.setAll(cursor.getLong(cloudsIndex));
-                requestedWeather.setClouds(clouds);
-
-
-                out.add(requestedWeather);
+                out.add(parseCursor(cursor));
             }
         }
         return out;
     }
 
-    // добавить запись в DB_TABLE
     public void addRec(RequestedWeather weather) {
         if (weather != null) {
             ContentValues cv = new ContentValues();
+
+            Long time = weather.getTime();
+            if (time == null || time == 0) {
+                time = Calendar.getInstance().getTimeInMillis();
+                weather.setTime(time);
+            }
+            cv.put(DBConstants.COLUMN_TIME, time);
+
             Coord coord = weather.getCoord();
             if (coord == null) {
                 coord = new Coord();

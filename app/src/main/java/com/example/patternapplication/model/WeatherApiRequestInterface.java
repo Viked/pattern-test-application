@@ -11,5 +11,5 @@ import rx.Observable;
  */
 public interface WeatherApiRequestInterface {
     @GET("weather?APPID=d45545a62ad42fe8a840303b8600c6d8")
-    Observable<RequestedWeather> getRoute(@Query("lat") double latitude, @Query("lon") double longitude);
+    Observable<RequestedWeather> getWeather(@Query("lat") double latitude, @Query("lon") double longitude);
 }

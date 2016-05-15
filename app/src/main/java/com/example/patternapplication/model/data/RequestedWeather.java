@@ -27,6 +27,16 @@ public class RequestedWeather {
 
     private Long cod = 0L;
 
+    private Long time = 0L;
+
+    public Long getTime() {
+        return time;
+    }
+
+    public void setTime(Long time) {
+        this.time = time;
+    }
+
     public Coord getCoord() {
         return coord;
     }

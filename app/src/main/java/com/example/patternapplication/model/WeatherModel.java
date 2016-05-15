@@ -11,9 +11,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class WeatherModel {
 
+    private WeatherModel(){}
+
     private static final String base_url = "http://api.openweathermap.org/data/2.5/";
 
-    public WeatherApiRequestInterface getApiModel() {
+    public static WeatherApiRequestInterface create() {
         //Logging
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
