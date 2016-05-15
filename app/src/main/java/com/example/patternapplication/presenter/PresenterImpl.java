@@ -17,6 +17,7 @@ import java.util.Calendar;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subjects.PublishSubject;
 
 /**
  * Created by Initb on 13.05.2016.
@@ -27,15 +28,18 @@ public class PresenterImpl implements IPresenter {
 
     private MainActivity activity;
     private DBModel dbModel;
-    private CurrentLocation currentLocation;
+
     private WeatherApiRequestInterface apiRequestInterface;
+
+    private Location currentLocation;
+
+    private Cursor cursor;
 
     @Override
     public void onCreate(Activity context) {
         this.activity = (MainActivity) context;
         dbModel = new DBModel(activity);
         dbModel.open();
-        currentLocation = new CurrentLocation();
         apiRequestInterface = WeatherModel.create();
     }
 
@@ -46,6 +50,17 @@ public class PresenterImpl implements IPresenter {
 
     @Override
     public void DBLoaded(Cursor cursor) {
+        this.cursor = cursor;
+        update();
+    }
+
+    @Override
+    public void onDestroy() {
+        dbModel.close();
+        cursor.close();
+    }
+
+    private void update(){
         if (cursor != null && cursor.getCount() > 0 && cursor.moveToLast()) {
             RequestedWeather weather = dbModel.parseCursor(cursor);
             Long currentTime = Calendar.getInstance().getTimeInMillis();
@@ -60,29 +75,27 @@ public class PresenterImpl implements IPresenter {
         }
     }
 
-    @Override
-    public void onDestroy() {
-        dbModel.close();
-    }
-
     private void updateWeather() {
-        updateLocation()
-                .flatMap(location -> apiRequestInterface.getWeather(location.getLatitude(), location.getLongitude()))
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(weather -> {
-                            dbModel.addRec(weather);
-                            updateView(weather);
-                        },
-                        Throwable::printStackTrace);
-    }
-
-    private Observable<Location> updateLocation() {
-        return currentLocation.getCurrentLocation(activity);
+        if(currentLocation != null) {
+            Observable.just(currentLocation)
+                    .flatMap(location -> apiRequestInterface.getWeather(location.getLatitude(), location.getLongitude()))
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(weather -> {
+                                dbModel.addRec(weather);
+                                updateView(weather);
+                            },
+                            Throwable::printStackTrace);
+        }
     }
 
     private void updateView(RequestedWeather weather) {
         activity.updateView(weather.getName());
     }
 
+    @Override
+    public void setLocation(Location location) {
+        currentLocation = location;
+        update();
+    }
 }
