@@ -1,124 +1,82 @@
-
 package com.example.patternapplication.model.data;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
-import java.util.HashMap;
-import java.util.Map;
-@DatabaseTable
 public class Main {
 
-    @DatabaseField(generatedId = true)
-    private int id;
-    @DatabaseField
     private Double temp = 0.0;
-    @DatabaseField
-    private Integer humidity= 0;
-    @DatabaseField
-    private Double pressure= 0.0;
-    @DatabaseField
-    private Double tempMin= 0.0;
-    @DatabaseField
-    private Double tempMax= 0.0;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    /**
-     * 
-     * @return
-     *     The temp
-     */
+    private Integer humidity= 0;
+
+    private Double pressure= 0.0;
+
+    private Double tempMin= 0.0;
+
+    private Double tempMax= 0.0;
+
+
     public Double getTemp() {
         return temp;
     }
 
-    /**
-     * 
-     * @param temp
-     *     The temp
-     */
     public void setTemp(Double temp) {
         this.temp = temp;
     }
 
-    /**
-     * 
-     * @return
-     *     The humidity
-     */
     public Integer getHumidity() {
         return humidity;
     }
 
-    /**
-     * 
-     * @param humidity
-     *     The humidity
-     */
     public void setHumidity(Integer humidity) {
         this.humidity = humidity;
     }
 
-    /**
-     * 
-     * @return
-     *     The pressure
-     */
     public Double getPressure() {
         return pressure;
     }
 
-    /**
-     * 
-     * @param pressure
-     *     The pressure
-     */
     public void setPressure(Double pressure) {
         this.pressure = pressure;
     }
 
-    /**
-     * 
-     * @return
-     *     The tempMin
-     */
     public Double getTempMin() {
         return tempMin;
     }
 
-    /**
-     * 
-     * @param tempMin
-     *     The temp_min
-     */
     public void setTempMin(Double tempMin) {
         this.tempMin = tempMin;
     }
 
-    /**
-     * 
-     * @return
-     *     The tempMax
-     */
     public Double getTempMax() {
         return tempMax;
     }
 
-    /**
-     * 
-     * @param tempMax
-     *     The temp_max
-     */
     public void setTempMax(Double tempMax) {
         this.tempMax = tempMax;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Main main = (Main) o;
+
+        if (temp != null ? !temp.equals(main.temp) : main.temp != null) return false;
+        if (humidity != null ? !humidity.equals(main.humidity) : main.humidity != null)
+            return false;
+        if (pressure != null ? !pressure.equals(main.pressure) : main.pressure != null)
+            return false;
+        if (tempMin != null ? !tempMin.equals(main.tempMin) : main.tempMin != null) return false;
+        return tempMax != null ? tempMax.equals(main.tempMax) : main.tempMax == null;
+
     }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    @Override
+    public int hashCode() {
+        int result = temp != null ? temp.hashCode() : 0;
+        result = 31 * result + (humidity != null ? humidity.hashCode() : 0);
+        result = 31 * result + (pressure != null ? pressure.hashCode() : 0);
+        result = 31 * result + (tempMin != null ? tempMin.hashCode() : 0);
+        result = 31 * result + (tempMax != null ? tempMax.hashCode() : 0);
+        return result;
     }
-
 }

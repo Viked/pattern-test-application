@@ -1,217 +1,154 @@
-
 package com.example.patternapplication.model.data;
 
-import com.example.patternapplication.model.db.DBConstants;
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.field.ForeignCollectionField;
-import com.j256.ormlite.table.DatabaseTable;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-@DatabaseTable(tableName = DBConstants.DB_TABLE)
 public class RequestedWeather {
 
-    @DatabaseField(generatedId = true, columnName = DBConstants.COLUMN_ID)
-    private int tableId;
-
-    @DatabaseField(canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Coord coord;
 
-    @DatabaseField(canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Sys sys;
 
-    @ForeignCollectionField(eager = false)
-    private List<Weather> weather = new ArrayList<Weather>();
+    private List<Weather> weather = new ArrayList<>();
 
-    @DatabaseField(canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Main main;
 
-    @DatabaseField(canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Wind wind;
 
-    @DatabaseField(canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Rain rain;
 
-    @DatabaseField(canBeNull = false, foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private Clouds clouds;
 
-    @DatabaseField(columnName = DBConstants.COLUMN_DT)
     private Long dt = 0L;
 
-    @DatabaseField(columnName = DBConstants.COLUMN_REQUEST_ID)
     private Long id = 0L;
 
-    @DatabaseField(columnName = DBConstants.COLUMN_NAME)
     private String name = "";
 
-    @DatabaseField(columnName = DBConstants.COLUMN_COD)
     private Long cod = 0L;
 
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
-
-    /**
-     * @return The coord
-     */
     public Coord getCoord() {
         return coord;
     }
 
-    /**
-     * @param coord The coord
-     */
     public void setCoord(Coord coord) {
         this.coord = coord;
     }
 
-    /**
-     * @return The sys
-     */
     public Sys getSys() {
         return sys;
     }
 
-    /**
-     * @param sys The sys
-     */
     public void setSys(Sys sys) {
         this.sys = sys;
     }
 
-    /**
-     * @return The weather
-     */
     public List<Weather> getWeather() {
         return weather;
     }
 
-    /**
-     * @param weather The weather
-     */
     public void setWeather(List<Weather> weather) {
         this.weather = weather;
     }
 
-    /**
-     * @return The main
-     */
     public Main getMain() {
         return main;
     }
 
-    /**
-     * @param main The main
-     */
     public void setMain(Main main) {
         this.main = main;
     }
 
-    /**
-     * @return The wind
-     */
     public Wind getWind() {
         return wind;
     }
 
-    /**
-     * @param wind The wind
-     */
     public void setWind(Wind wind) {
         this.wind = wind;
     }
 
-    /**
-     * @return The rain
-     */
     public Rain getRain() {
         return rain;
     }
 
-    /**
-     * @param rain The rain
-     */
     public void setRain(Rain rain) {
         this.rain = rain;
     }
 
-    /**
-     * @return The clouds
-     */
     public Clouds getClouds() {
         return clouds;
     }
 
-    /**
-     * @param clouds The clouds
-     */
     public void setClouds(Clouds clouds) {
         this.clouds = clouds;
     }
 
-    /**
-     * @return The dt
-     */
     public Long getDt() {
         return dt;
     }
 
-    /**
-     * @param dt The dt
-     */
     public void setDt(Long dt) {
         this.dt = dt;
     }
 
-    /**
-     * @return The id
-     */
     public Long getId() {
         return id;
     }
 
-    /**
-     * @param id The id
-     */
     public void setId(Long id) {
         this.id = id;
     }
 
-    /**
-     * @return The name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * @param name The name
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * @return The cod
-     */
     public Long getCod() {
         return cod;
     }
 
-    /**
-     * @param cod The cod
-     */
     public void setCod(Long cod) {
         this.cod = cod;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        RequestedWeather that = (RequestedWeather) o;
+
+        if (coord != null ? !coord.equals(that.coord) : that.coord != null) return false;
+        if (sys != null ? !sys.equals(that.sys) : that.sys != null) return false;
+        if (weather != null ? !weather.equals(that.weather) : that.weather != null) return false;
+        if (main != null ? !main.equals(that.main) : that.main != null) return false;
+        if (wind != null ? !wind.equals(that.wind) : that.wind != null) return false;
+        if (rain != null ? !rain.equals(that.rain) : that.rain != null) return false;
+        if (clouds != null ? !clouds.equals(that.clouds) : that.clouds != null) return false;
+        if (dt != null ? !dt.equals(that.dt) : that.dt != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        return cod != null ? cod.equals(that.cod) : that.cod == null;
+
     }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    @Override
+    public int hashCode() {
+        int result = coord != null ? coord.hashCode() : 0;
+        result = 31 * result + (sys != null ? sys.hashCode() : 0);
+        result = 31 * result + (weather != null ? weather.hashCode() : 0);
+        result = 31 * result + (main != null ? main.hashCode() : 0);
+        result = 31 * result + (wind != null ? wind.hashCode() : 0);
+        result = 31 * result + (rain != null ? rain.hashCode() : 0);
+        result = 31 * result + (clouds != null ? clouds.hashCode() : 0);
+        result = 31 * result + (dt != null ? dt.hashCode() : 0);
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (cod != null ? cod.hashCode() : 0);
+        return result;
     }
-
 }

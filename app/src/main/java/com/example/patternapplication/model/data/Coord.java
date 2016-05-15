@@ -1,66 +1,44 @@
 
 package com.example.patternapplication.model.data;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
-import java.util.HashMap;
-import java.util.Map;
-
-@DatabaseTable
 public class Coord {
 
-    @DatabaseField(generatedId = true)
-    private int id;
-
-    @DatabaseField
     private Double lon = 0.0;
-    @DatabaseField
-    private Double lat = 0.0;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    /**
-     * 
-     * @return
-     *     The lon
-     */
+    private Double lat = 0.0;
+
     public Double getLon() {
         return lon;
     }
 
-    /**
-     * 
-     * @param lon
-     *     The lon
-     */
     public void setLon(Double lon) {
         this.lon = lon;
     }
 
-    /**
-     * 
-     * @return
-     *     The lat
-     */
     public Double getLat() {
         return lat;
     }
 
-    /**
-     * 
-     * @param lat
-     *     The lat
-     */
     public void setLat(Double lat) {
         this.lat = lat;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Coord coord = (Coord) o;
+
+        if (lon != null ? !lon.equals(coord.lon) : coord.lon != null) return false;
+        return lat != null ? lat.equals(coord.lat) : coord.lat == null;
+
     }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    @Override
+    public int hashCode() {
+        int result = lon != null ? lon.hashCode() : 0;
+        result = 31 * result + (lat != null ? lat.hashCode() : 0);
+        return result;
     }
-
 }

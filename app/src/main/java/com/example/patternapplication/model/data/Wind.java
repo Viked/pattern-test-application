@@ -1,66 +1,47 @@
-
 package com.example.patternapplication.model.data;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
-import java.util.HashMap;
-import java.util.Map;
-
-@DatabaseTable
 public class Wind {
 
-    @DatabaseField(generatedId = true)
     private int id;
 
-    @DatabaseField
     private Double speed = 0.0;
-    @DatabaseField
-    private Double deg = 0.0;
-    private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    /**
-     * 
-     * @return
-     *     The speed
-     */
+    private Double deg = 0.0;
+
     public Double getSpeed() {
         return speed;
     }
 
-    /**
-     * 
-     * @param speed
-     *     The speed
-     */
     public void setSpeed(Double speed) {
         this.speed = speed;
     }
 
-    /**
-     * 
-     * @return
-     *     The deg
-     */
     public Double getDeg() {
         return deg;
     }
 
-    /**
-     * 
-     * @param deg
-     *     The deg
-     */
     public void setDeg(Double deg) {
         this.deg = deg;
     }
 
-    public Map<String, Object> getAdditionalProperties() {
-        return this.additionalProperties;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Wind wind = (Wind) o;
+
+        if (id != wind.id) return false;
+        if (speed != null ? !speed.equals(wind.speed) : wind.speed != null) return false;
+        return deg != null ? deg.equals(wind.deg) : wind.deg == null;
+
     }
 
-    public void setAdditionalProperty(String name, Object value) {
-        this.additionalProperties.put(name, value);
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (speed != null ? speed.hashCode() : 0);
+        result = 31 * result + (deg != null ? deg.hashCode() : 0);
+        return result;
     }
-
 }

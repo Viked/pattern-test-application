@@ -10,6 +10,8 @@ import com.example.patternapplication.model.CurrentLocation;
 import com.example.patternapplication.model.data.RequestedWeather;
 import com.example.patternapplication.model.db.DBModel;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +19,7 @@ import org.junit.runner.RunWith;
 import rx.observers.TestSubscriber;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by Initb on 13.05.2016.
@@ -25,33 +28,53 @@ import static org.junit.Assert.*;
 @LargeTest
 public class DBUnitTest {
 
+    private DBModel model;
+    private RequestedWeather weather;
+
     @Rule
     public ActivityTestRule mActivityRule = new ActivityTestRule<>(
             MainActivity.class);
 
+    @Before
+    public void init(){
+        model = new DBModel(mActivityRule.getActivity());
+        model.open();
+        weather = new RequestedWeather();
+        weather.setId(1L);
+    }
+
     @Test
     public void testDB() {
-        DBModel model = new DBModel(mActivityRule.getActivity());
-        model.open();
         Cursor temp = model.getAllData();
         assertNotNull(temp);
         assertEquals(temp.getCount(), 0);
         temp.close();
-
-        RequestedWeather weather1 = new RequestedWeather();
-        weather1.setId(1L);
-        model.addRec(weather1);
-        temp = model.getAllData();
-        assertEquals(temp.getCount(), 1);
-        temp.close();
-
-        model.delRec(weather1);
-        temp = model.getAllData();
-        assertEquals(temp.getCount(), 0);
-        temp.close();
-
-
-        model.close();
+        testDBAdding();
+        testDBDeleting();
     }
 
+
+
+    private void testDBAdding() {
+        model.addRec(weather);
+        Cursor temp = model.getAllData();
+        assertEquals(temp.getCount(), 1);
+        RequestedWeather gatedWeather = model.parseCursor(temp).get(0);
+        assertEquals(weather, gatedWeather);
+        temp.close();
+    }
+
+
+    private void testDBDeleting() {
+        model.delRec(weather);
+        Cursor temp = model.getAllData();
+        assertEquals(temp.getCount(), 0);
+        temp.close();
+    }
+
+
+    @After
+    public void stop(){
+        model.close();
+    }
 }

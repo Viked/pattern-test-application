@@ -13,8 +13,6 @@ public class DBHelper extends SQLiteOpenHelper {
         super(context, name, factory, version);
     }
 
-
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(DBConstants.DB_CREATE);
