@@ -3,21 +3,23 @@ package com.example.patternapplication.presenter;
 import android.app.Activity;
 import android.database.Cursor;
 import android.location.Location;
-import android.os.Looper;
+import android.widget.TextView;
 
 import com.example.patternapplication.MainActivity;
-import com.example.patternapplication.model.CurrentLocation;
 import com.example.patternapplication.model.WeatherApiRequestInterface;
 import com.example.patternapplication.model.WeatherModel;
 import com.example.patternapplication.model.data.RequestedWeather;
 import com.example.patternapplication.model.db.DBModel;
+import com.example.patternapplication.model.observable.BaseDecorator;
+import com.example.patternapplication.model.observable.BaseObject;
+import com.example.patternapplication.model.observable.TemperatureDecorator;
+import com.example.patternapplication.model.observable.ViewTextDecorator;
 
 import java.util.Calendar;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import rx.subjects.PublishSubject;
 
 /**
  * Created by Initb on 13.05.2016.
@@ -35,12 +37,21 @@ public class PresenterImpl implements IPresenter {
 
     private Cursor cursor;
 
+    private java.util.Observable dataObservable;
+
     @Override
     public void onCreate(Activity context) {
         this.activity = (MainActivity) context;
         dbModel = new DBModel(activity);
         dbModel.open();
         apiRequestInterface = WeatherModel.create();
+        dataObservable = new java.util.Observable(){
+            @Override
+            public boolean hasChanged() {
+                return true;
+            }
+        };
+
     }
 
     @Override
@@ -75,6 +86,26 @@ public class PresenterImpl implements IPresenter {
         }
     }
 
+    public void initialViews(TextView[] textViews){
+        for(int i = 0; i < textViews.length; i++){
+            BaseDecorator object;
+            switch (i%4){
+                case 1 :
+                    object = new TemperatureDecorator(new BaseObject(textViews[i]));
+                    break;
+                case 2 :
+                    object = new TemperatureDecorator(new TemperatureDecorator(new TemperatureDecorator(new BaseObject(textViews[i]))));
+                    break;
+                case 3 :
+                    object = new TemperatureDecorator(new TemperatureDecorator(new BaseObject(textViews[i])));
+                    break;
+                default :
+                    object = new TemperatureDecorator(new BaseObject(textViews[i]));
+            }
+            dataObservable.addObserver(object);
+        }
+    }
+
     private void updateWeather() {
         if(currentLocation != null) {
             Observable.just(currentLocation)
@@ -90,7 +121,7 @@ public class PresenterImpl implements IPresenter {
     }
 
     private void updateView(RequestedWeather weather) {
-        activity.updateView(weather.getName());
+        dataObservable.notifyObservers(weather);
     }
 
     @Override
@@ -98,4 +129,8 @@ public class PresenterImpl implements IPresenter {
         currentLocation = location;
         update();
     }
+
+
+
+
 }

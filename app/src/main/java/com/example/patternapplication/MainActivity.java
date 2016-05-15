@@ -25,16 +25,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private GoogleApiClient apiClient;
 
-    private TextView textView;
-
     //open weather api key d45545a62ad42fe8a840303b8600c6d8
     IPresenter presenter = new PresenterImpl();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textView = (TextView)findViewById(R.id.textView);
         presenter.onCreate(this);
+        presenter.initialViews(new TextView[]{
+                (TextView)findViewById(R.id.textView1),
+                (TextView)findViewById(R.id.textView2),
+                (TextView)findViewById(R.id.textView3),
+                (TextView)findViewById(R.id.textView4)
+        });
         apiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -54,9 +57,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         presenter.onDestroy();
     }
 
-    public void updateView(String text){
-        textView.setText(text);
-    }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
