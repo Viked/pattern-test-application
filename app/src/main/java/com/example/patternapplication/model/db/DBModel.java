@@ -15,7 +15,6 @@ import com.example.patternapplication.model.data.Wind;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -148,7 +147,7 @@ public class DBModel {
         main.setPressure(cursor.getDouble(mainPressureIndex));
         main.setTemp(cursor.getDouble(mainTempIndex));
         main.setTempMax(cursor.getDouble(mainTempMaxIndex));
-        main.setTempMin(cursor.getDouble(mainTempMinIndex));
+        main.setTemp_min(cursor.getDouble(mainTempMinIndex));
         requestedWeather.setMain(main);
 
         Wind wind = new Wind();
@@ -216,7 +215,7 @@ public class DBModel {
             cv.put(DBConstants.COLUMN_MAIN_TEMP, m.getTemp());
             cv.put(DBConstants.COLUMN_MAIN_PRESSURE, m.getPressure());
             cv.put(DBConstants.COLUMN_MAIN_HUMIDITY, m.getHumidity());
-            cv.put(DBConstants.COLUMN_MAIN_TEMP_MIN, m.getTempMin());
+            cv.put(DBConstants.COLUMN_MAIN_TEMP_MIN, m.getTemp_min());
             cv.put(DBConstants.COLUMN_MAIN_TEMP_MAX, m.getTempMax());
 
 

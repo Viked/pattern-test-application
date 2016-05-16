@@ -1,15 +1,13 @@
 package com.example.patternapplication;
 
-import android.location.Location;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.example.patternapplication.view.MainActivity;
 
-import rx.observers.TestSubscriber;
+import org.junit.Rule;
+import org.junit.runner.RunWith;
 
 /**
  * Created by Initb on 12.05.2016.

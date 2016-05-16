@@ -4,6 +4,8 @@ import android.widget.TextView;
 
 import com.example.patternapplication.model.data.RequestedWeather;
 
+import java.util.Locale;
+
 /**
  * Created by 1 on 15.05.2016.
  */
@@ -22,7 +24,8 @@ public class BaseObject implements ViewTextDecorator{
 
     @Override
     public String getText(RequestedWeather weather){
-        return "" + (weather.getMain().getTemp() - 273.15);
+        textView.setTag(weather);
+        return String.format(Locale.getDefault(), "Текущаяя температура: %.2f",(weather.getMain().getTemp() - 273.15));
     }
 
 }

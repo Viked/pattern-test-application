@@ -1,11 +1,12 @@
 package com.example.patternapplication.presenter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.location.Location;
 import android.widget.TextView;
 
-import com.example.patternapplication.MainActivity;
+import com.example.patternapplication.view.MainActivity;
 import com.example.patternapplication.model.WeatherApiRequestInterface;
 import com.example.patternapplication.model.WeatherModel;
 import com.example.patternapplication.model.data.RequestedWeather;
@@ -13,7 +14,7 @@ import com.example.patternapplication.model.db.DBModel;
 import com.example.patternapplication.model.observable.BaseDecorator;
 import com.example.patternapplication.model.observable.BaseObject;
 import com.example.patternapplication.model.observable.TemperatureDecorator;
-import com.example.patternapplication.model.observable.ViewTextDecorator;
+import com.example.patternapplication.view.MapActivity;
 
 import java.util.Calendar;
 
@@ -88,6 +89,14 @@ public class PresenterImpl implements IPresenter {
 
     public void initialViews(TextView[] textViews){
         for(int i = 0; i < textViews.length; i++){
+            textViews[i].setOnClickListener(v -> {
+                RequestedWeather weather = (RequestedWeather) v.getTag();
+                if(weather!=null){
+                    Intent intent = new Intent(v.getContext(), MapActivity.class);
+                    intent.putExtra(MapActivity.LOCATION_KEY, new double[]{weather.getCoord().getLat(), weather.getCoord().getLon()});
+                    activity.startActivity(intent);
+                }
+            });
             BaseDecorator object;
             switch (i%4){
                 case 1 :

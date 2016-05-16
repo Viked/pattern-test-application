@@ -1,4 +1,4 @@
-package com.example.patternapplication;
+package com.example.patternapplication.view;
 
 import android.Manifest;
 import android.content.Context;
@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.example.patternapplication.R;
 import com.example.patternapplication.presenter.IPresenter;
 import com.example.patternapplication.presenter.PresenterImpl;
 import com.google.android.gms.common.ConnectionResult;

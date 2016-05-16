@@ -13,13 +13,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:name=".WeatherApplication">
-        <activity android:name=".MainActivity">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCtHZZYn0X9JX1I9n8vwnxs4C0_wF0ocTA" />
+        <activity android:name=".view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".view.MapActivity"
+            android:label="@string/title_activity_map">
+        </activity>
+
     </application>
 
 </manifest>

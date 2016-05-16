@@ -7,6 +7,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 
 import com.example.patternapplication.model.data.RequestedWeather;
 import com.example.patternapplication.model.db.DBModel;
+import com.example.patternapplication.view.MainActivity;
 
 import org.junit.After;
 import org.junit.Before;

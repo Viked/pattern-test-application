@@ -2,6 +2,8 @@ package com.example.patternapplication.model.observable;
 
 import com.example.patternapplication.model.data.RequestedWeather;
 
+import java.util.Locale;
+
 /**
  * Created by 1 on 16.05.2016.
  */
@@ -18,6 +20,8 @@ public class TemperatureDecorator extends BaseDecorator {
 
     @Override
     public String getText(RequestedWeather weather) {
-        return weather.getMain().getTempMin() + " - " + weather.getMain().getTempMax() + " ~ " + super.getText(weather);
+        return String.format(Locale.getDefault(), "Минимальная температура: %.2f", (weather.getMain().getTemp_min() - 273.15)) +
+                String.format(Locale.getDefault(), "\nМаксимальная температура:  %.2f\n", (weather.getMain().getTempMax() - 273.15)) +
+                super.getText(weather);
     }
 }

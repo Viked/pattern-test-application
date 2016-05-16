@@ -8,9 +8,9 @@ public class Main {
 
     private Double pressure= 0.0;
 
-    private Double tempMin= 0.0;
+    private Double temp_min = 0.0;
 
-    private Double tempMax= 0.0;
+    private Double temp_max= 0.0;
 
 
     public Double getTemp() {
@@ -37,20 +37,20 @@ public class Main {
         this.pressure = pressure;
     }
 
-    public Double getTempMin() {
-        return tempMin;
+    public Double getTemp_min() {
+        return temp_min;
     }
 
-    public void setTempMin(Double tempMin) {
-        this.tempMin = tempMin;
+    public void setTemp_min(Double temp_min) {
+        this.temp_min = temp_min;
     }
 
     public Double getTempMax() {
-        return tempMax;
+        return temp_max;
     }
 
     public void setTempMax(Double tempMax) {
-        this.tempMax = tempMax;
+        this.temp_max = tempMax;
     }
 
     @Override
@@ -65,8 +65,8 @@ public class Main {
             return false;
         if (pressure != null ? !pressure.equals(main.pressure) : main.pressure != null)
             return false;
-        if (tempMin != null ? !tempMin.equals(main.tempMin) : main.tempMin != null) return false;
-        return tempMax != null ? tempMax.equals(main.tempMax) : main.tempMax == null;
+        if (temp_min != null ? !temp_min.equals(main.temp_min) : main.temp_min != null) return false;
+        return temp_max != null ? temp_max.equals(main.temp_max) : main.temp_max == null;
 
     }
 
@@ -75,8 +75,8 @@ public class Main {
         int result = temp != null ? temp.hashCode() : 0;
         result = 31 * result + (humidity != null ? humidity.hashCode() : 0);
         result = 31 * result + (pressure != null ? pressure.hashCode() : 0);
-        result = 31 * result + (tempMin != null ? tempMin.hashCode() : 0);
-        result = 31 * result + (tempMax != null ? tempMax.hashCode() : 0);
+        result = 31 * result + (temp_min != null ? temp_min.hashCode() : 0);
+        result = 31 * result + (temp_max != null ? temp_max.hashCode() : 0);
         return result;
     }
 }
