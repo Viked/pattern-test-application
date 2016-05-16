@@ -5,6 +5,9 @@ import android.database.Cursor;
 import android.location.Location;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Observer;
 
 /**
@@ -14,7 +17,9 @@ public interface IPresenter{
     void onCreate(Activity context);
     Cursor loadDB();
     void DBLoaded(Cursor cursor);
-    void setLocation(Location location);
     void onDestroy();
-    void initialViews(TextView[] textViews);
+    void setMode(String string);
+    void setMap(GoogleMap googleMap);
+
+    void addLocation(LatLng latLng);
 }

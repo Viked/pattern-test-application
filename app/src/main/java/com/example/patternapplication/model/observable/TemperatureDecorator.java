@@ -1,6 +1,8 @@
 package com.example.patternapplication.model.observable;
 
+import com.example.patternapplication.model.data.Main;
 import com.example.patternapplication.model.data.RequestedWeather;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Locale;
 
@@ -9,19 +11,15 @@ import java.util.Locale;
  */
 public class TemperatureDecorator extends BaseDecorator {
 
-    public TemperatureDecorator(ViewTextDecorator decorator) {
+    public TemperatureDecorator(MarkerDecorator decorator) {
         super(decorator);
     }
 
     @Override
-    public void setText(String text) {
-        super.setText(text);
-    }
-
-    @Override
-    public String getText(RequestedWeather weather) {
-        return String.format(Locale.getDefault(), "Минимальная температура: %.2f", (weather.getMain().getTemp_min() - 273.15)) +
-                String.format(Locale.getDefault(), "\nМаксимальная температура:  %.2f\n", (weather.getMain().getTempMax() - 273.15)) +
-                super.getText(weather);
+    public String getText() {
+        Main main = super.getWeather().getMain();
+        return String.format(Locale.getDefault(), "Минимальная температура: %.2f", (main.getTemp_min() - 273.15)) +
+                String.format(Locale.getDefault(), "\nМаксимальная температура:  %.2f\n", (main.getTempMax() - 273.15)) +
+                super.getText();
     }
 }

@@ -180,6 +180,7 @@ public class DBModel {
 
     public void addRec(RequestedWeather weather) {
         if (weather != null) {
+            delRec(weather);
             ContentValues cv = new ContentValues();
 
             Long time = weather.getTime();
@@ -266,7 +267,8 @@ public class DBModel {
 
     // удалить запись из DB_TABLE
     public void delRec(RequestedWeather weather) {
-        mDB.delete(DBConstants.DB_TABLE, DBConstants.COLUMN_REQUEST_ID + " = " + weather.getId(), null);
+        mDB.delete(DBConstants.DB_TABLE, DBConstants.COLUMN_COORD_LAT + " = " + weather.getCoord().getLat()+ ", "+
+                DBConstants.COLUMN_COORD_LON + " = " + weather.getCoord().getLon(), null);
     }
 
 }

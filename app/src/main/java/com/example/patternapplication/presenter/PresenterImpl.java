@@ -3,20 +3,24 @@ package com.example.patternapplication.presenter;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.location.Location;
 import android.widget.TextView;
 
+import com.example.patternapplication.model.observable.MarkerDecorator;
 import com.example.patternapplication.view.MainActivity;
 import com.example.patternapplication.model.WeatherApiRequestInterface;
 import com.example.patternapplication.model.WeatherModel;
 import com.example.patternapplication.model.data.RequestedWeather;
 import com.example.patternapplication.model.db.DBModel;
 import com.example.patternapplication.model.observable.BaseDecorator;
-import com.example.patternapplication.model.observable.BaseObject;
+import com.example.patternapplication.model.observable.BaseMarker;
 import com.example.patternapplication.model.observable.TemperatureDecorator;
-import com.example.patternapplication.view.MapActivity;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -34,11 +38,14 @@ public class PresenterImpl implements IPresenter {
 
     private WeatherApiRequestInterface apiRequestInterface;
 
-    private Location currentLocation;
-
-    private Cursor cursor;
-
     private java.util.Observable dataObservable;
+
+    private GoogleMap googleMap;
+
+    private List<MarkerDecorator> newMarkers = new ArrayList<>();
+    private List<MarkerDecorator> readyMarkers = new ArrayList<>();
+
+    private int mode = 0;
 
     @Override
     public void onCreate(Activity context) {
@@ -46,7 +53,7 @@ public class PresenterImpl implements IPresenter {
         dbModel = new DBModel(activity);
         dbModel.open();
         apiRequestInterface = WeatherModel.create();
-        dataObservable = new java.util.Observable(){
+        dataObservable = new java.util.Observable() {
             @Override
             public boolean hasChanged() {
                 return true;
@@ -62,84 +69,90 @@ public class PresenterImpl implements IPresenter {
 
     @Override
     public void DBLoaded(Cursor cursor) {
-        this.cursor = cursor;
-        update();
+        if (cursor != null) {
+            if (cursor.getCount() > 0) {
+                Long currentTime = Calendar.getInstance().getTimeInMillis();
+                for (RequestedWeather weather : dbModel.getDataList(cursor)) {
+                    Long time = currentTime - weather.getTime();
+                    if (time > TIME_THRESHOLD && time < 36000000) {
+                        updateWeather(weather.getCoord().getLat(), weather.getCoord().getLon());
+                    } else {
+                        updateView(weather);
+                    }
+                }
+            }
+            cursor.close();
+        }
+
     }
 
     @Override
     public void onDestroy() {
         dbModel.close();
-        cursor.close();
+
     }
 
-    private void update(){
-        if (cursor != null && cursor.getCount() > 0 && cursor.moveToLast()) {
-            RequestedWeather weather = dbModel.parseCursor(cursor);
-            Long currentTime = Calendar.getInstance().getTimeInMillis();
-            Long time = currentTime - weather.getTime();
-            if (time > TIME_THRESHOLD) {
-                updateWeather();
-            } else {
-                updateView(weather);
-            }
-        } else {
-            updateWeather();
+    public MarkerDecorator initial(LatLng latLng) {
+        MarkerDecorator decorator = new BaseDecorator(new BaseMarker(latLng));
+        switch (mode) {
+            case 2:
+                //decorator =
+            case 1:
+                decorator = new TemperatureDecorator(decorator);
         }
+        dataObservable.addObserver((BaseDecorator) decorator);
+        newMarkers.add(decorator);
+        activity.loadDB();
+        return decorator;
     }
 
-    public void initialViews(TextView[] textViews){
-        for(int i = 0; i < textViews.length; i++){
-            textViews[i].setOnClickListener(v -> {
-                RequestedWeather weather = (RequestedWeather) v.getTag();
-                if(weather!=null){
-                    Intent intent = new Intent(v.getContext(), MapActivity.class);
-                    intent.putExtra(MapActivity.LOCATION_KEY, new double[]{weather.getCoord().getLat(), weather.getCoord().getLon()});
-                    activity.startActivity(intent);
-                }
-            });
-            BaseDecorator object;
-            switch (i%4){
-                case 1 :
-                    object = new TemperatureDecorator(new BaseObject(textViews[i]));
-                    break;
-                case 2 :
-                    object = new TemperatureDecorator(new TemperatureDecorator(new TemperatureDecorator(new BaseObject(textViews[i]))));
-                    break;
-                case 3 :
-                    object = new TemperatureDecorator(new TemperatureDecorator(new BaseObject(textViews[i])));
-                    break;
-                default :
-                    object = new TemperatureDecorator(new BaseObject(textViews[i]));
-            }
-            dataObservable.addObserver(object);
-        }
-    }
+    private void updateWeather(double lat, double lon) {
+        apiRequestInterface.getWeather(lat, lon)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(weather -> {
+                            dbModel.addRec(weather);
+                            updateView(weather);
+                        },
+                        Throwable::printStackTrace);
 
-    private void updateWeather() {
-        if(currentLocation != null) {
-            Observable.just(currentLocation)
-                    .flatMap(location -> apiRequestInterface.getWeather(location.getLatitude(), location.getLongitude()))
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(weather -> {
-                                dbModel.addRec(weather);
-                                updateView(weather);
-                            },
-                            Throwable::printStackTrace);
-        }
     }
 
     private void updateView(RequestedWeather weather) {
+        if(!newMarkers.isEmpty()){
+            newMarkers.get(0).setWeather(weather);
+            if(googleMap != null){
+                googleMap.addMarker(newMarkers.get(0).getMarkerOptions());
+            } else {
+                readyMarkers.add(newMarkers.get(0));
+            }
+            newMarkers.remove(0);
+        }
         dataObservable.notifyObservers(weather);
     }
 
     @Override
-    public void setLocation(Location location) {
-        currentLocation = location;
-        update();
+    public void setMode(String string) {
+        mode = Integer.parseInt(string);
     }
 
+    @Override
+    public void setMap(GoogleMap googleMap) {
+        this.googleMap = googleMap;
+        for (MarkerDecorator decorator : readyMarkers){
+            googleMap.addMarker(decorator.getMarkerOptions());
+        }
+        readyMarkers.clear();
+    }
 
+    @Override
+    public void addLocation(LatLng latLng) {
+        MarkerDecorator temp = initial(latLng);
+        if(googleMap != null){
+            googleMap.addMarker(temp.getMarkerOptions());
+        } else {
+            readyMarkers.add(temp);
+        }
 
-
+    }
 }

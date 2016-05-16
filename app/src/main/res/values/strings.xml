@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">PatternApplication</string>
     <string name="title_activity_map">Weather position</string>
+    <string name="title_simple">Simple</string>
+    <string name="title_with_two_temperatures">With min/max t</string>
+    <string name="title_bonus">Bonus</string>
 </resources>
