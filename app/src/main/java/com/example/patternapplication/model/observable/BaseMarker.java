@@ -19,12 +19,12 @@ public class BaseMarker implements MarkerDecorator {
     public BaseMarker(LatLng latLng) {
         markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
+        markerOptions.title("Погода");
     }
 
     @Override
     public void setText(String text) {
-        markerOptions.title(text);
-        markerOptions.notify();
+        markerOptions.snippet(text);
     }
 
     @Override

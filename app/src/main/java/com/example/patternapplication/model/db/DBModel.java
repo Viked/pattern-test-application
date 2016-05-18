@@ -267,8 +267,7 @@ public class DBModel {
 
     // удалить запись из DB_TABLE
     public void delRec(RequestedWeather weather) {
-        mDB.delete(DBConstants.DB_TABLE, DBConstants.COLUMN_COORD_LAT + " = " + weather.getCoord().getLat()+ ", "+
-                DBConstants.COLUMN_COORD_LON + " = " + weather.getCoord().getLon(), null);
+        mDB.delete(DBConstants.DB_TABLE, DBConstants.COLUMN_TIME + " = " + weather.getTime(), null);
     }
 
 }

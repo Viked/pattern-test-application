@@ -14,6 +14,7 @@ import com.example.patternapplication.model.db.DBModel;
 import com.example.patternapplication.model.observable.BaseDecorator;
 import com.example.patternapplication.model.observable.BaseMarker;
 import com.example.patternapplication.model.observable.TemperatureDecorator;
+import com.example.patternapplication.view.PopupAdapter;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -42,8 +43,7 @@ public class PresenterImpl implements IPresenter {
 
     private GoogleMap googleMap;
 
-    private List<MarkerDecorator> newMarkers = new ArrayList<>();
-    private List<MarkerDecorator> readyMarkers = new ArrayList<>();
+    private List<MarkerDecorator> markers = new ArrayList<>();
 
     private int mode = 0;
 
@@ -101,8 +101,7 @@ public class PresenterImpl implements IPresenter {
                 decorator = new TemperatureDecorator(decorator);
         }
         dataObservable.addObserver((BaseDecorator) decorator);
-        newMarkers.add(decorator);
-        activity.loadDB();
+        markers.add(decorator);
         return decorator;
     }
 
@@ -119,16 +118,11 @@ public class PresenterImpl implements IPresenter {
     }
 
     private void updateView(RequestedWeather weather) {
-        if(!newMarkers.isEmpty()){
-            newMarkers.get(0).setWeather(weather);
-            if(googleMap != null){
-                googleMap.addMarker(newMarkers.get(0).getMarkerOptions());
-            } else {
-                readyMarkers.add(newMarkers.get(0));
-            }
-            newMarkers.remove(0);
-        }
         dataObservable.notifyObservers(weather);
+        googleMap.clear();
+        for (MarkerDecorator decorator : markers) {
+            googleMap.addMarker(decorator.getMarkerOptions()).showInfoWindow();
+        }
     }
 
     @Override
@@ -139,20 +133,26 @@ public class PresenterImpl implements IPresenter {
     @Override
     public void setMap(GoogleMap googleMap) {
         this.googleMap = googleMap;
-        for (MarkerDecorator decorator : readyMarkers){
-            googleMap.addMarker(decorator.getMarkerOptions());
+        for (MarkerDecorator decorator : markers) {
+            googleMap.addMarker(decorator.getMarkerOptions()).showInfoWindow();
         }
-        readyMarkers.clear();
+        googleMap.setInfoWindowAdapter(new PopupAdapter(activity.getLayoutInflater()));
     }
 
     @Override
     public void addLocation(LatLng latLng) {
         MarkerDecorator temp = initial(latLng);
-        if(googleMap != null){
-            googleMap.addMarker(temp.getMarkerOptions());
-        } else {
-            readyMarkers.add(temp);
+        apiRequestInterface.getWeather(latLng.latitude, latLng.longitude)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(weather -> {
+                            temp.setWeather(weather);
+                            dbModel.addRec(weather);
+                            updateView(weather);
+                        },
+                        Throwable::printStackTrace);
+        if (googleMap != null) {
+            googleMap.addMarker(temp.getMarkerOptions()).showInfoWindow();
         }
-
     }
 }
