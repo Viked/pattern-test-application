@@ -1,7 +1,5 @@
 package com.example.patternapplication.model.observable;
 
-import android.widget.TextView;
-
 import com.example.patternapplication.model.data.RequestedWeather;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;

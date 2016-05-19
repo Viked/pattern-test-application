@@ -1,14 +1,14 @@
 package com.example.patternapplication;
 
 import android.database.Cursor;
-import android.support.test.rule.ActivityTestRule;
-import android.support.test.runner.AndroidJUnit4;
+//import android.support.test.rule.ActivityTestRule;
+//import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.example.patternapplication.model.data.RequestedWeather;
 import com.example.patternapplication.model.db.DBModel;
 import com.example.patternapplication.view.MainActivity;
-
+/*
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -21,10 +21,10 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by Initb on 13.05.2016.
  */
-@RunWith(AndroidJUnit4.class)
+//@RunWith(AndroidJUnit4.class)
 @LargeTest
 public class DBUnitTest {
-
+/*
     private DBModel model;
     private RequestedWeather weather;
 
@@ -74,4 +74,5 @@ public class DBUnitTest {
     public void stop(){
         model.close();
     }
+    */
 }

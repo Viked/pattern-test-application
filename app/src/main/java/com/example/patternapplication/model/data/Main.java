@@ -37,11 +37,11 @@ public class Main {
         this.pressure = pressure;
     }
 
-    public Double getTemp_min() {
+    public Double getTempMin() {
         return temp_min;
     }
 
-    public void setTemp_min(Double temp_min) {
+    public void setTempMin(Double temp_min) {
         this.temp_min = temp_min;
     }
 
