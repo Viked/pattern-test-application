@@ -14,17 +14,27 @@ import android.view.ViewGroup;
 import com.example.patternapplication.R;
 import com.example.patternapplication.WeatherApplication;
 import com.example.patternapplication.presenter.IPresenter;
-import com.example.patternapplication.view.adapters.WeatherRecyclerViewAdapter;
-import com.example.patternapplication.view.fragments.interfaces.IListFragment;
+import com.example.patternapplication.view.adapters.AbstractRecyclerViewAdapter;
+import com.example.patternapplication.view.adapters.MarkerRecyclerViewAdapter;
 
 /**
- * Created by Initb on 18.05.2016.
+ * Created by 1 on 19.05.2016.
  */
-public class ListFragment extends Fragment implements IListFragment {
+public abstract class BaseListFragment<T extends AbstractRecyclerViewAdapter> extends Fragment {
 
     private IPresenter presenter;
 
-    private WeatherRecyclerViewAdapter adapter;
+    private T adapter;
+
+    public abstract T initialAdapter();
+
+    public T getAdapter() {
+        return adapter;
+    }
+
+    public IPresenter getPresenter() {
+        return presenter;
+    }
 
     @Nullable
     @Override
@@ -36,7 +46,7 @@ public class ListFragment extends Fragment implements IListFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ((RecyclerView) view).setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new WeatherRecyclerViewAdapter();
+        adapter = initialAdapter();
         ((RecyclerView) view).setAdapter(adapter);
     }
 
@@ -44,21 +54,10 @@ public class ListFragment extends Fragment implements IListFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         presenter = ((WeatherApplication)context.getApplicationContext()).getPresenter();
-        presenter.attachListFragment(this);
     }
 
-    @Override
-    public void setList(Cursor cursor) {
-        if(adapter !=null) {
-            adapter.setCursor(cursor);
-        }
+    public void notifyDataSetChanged(){
+        adapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(presenter != null && presenter.getWeatherDB().getDBCursor() != null ){
-            adapter.setCursor(presenter.getWeatherDB().getDBCursor());
-        }
-    }
 }

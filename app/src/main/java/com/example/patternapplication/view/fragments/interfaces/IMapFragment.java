@@ -1,4 +1,4 @@
-package com.example.patternapplication.view.fragments;
+package com.example.patternapplication.view.fragments.interfaces;
 
 import com.google.android.gms.maps.model.MarkerOptions;
 

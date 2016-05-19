@@ -13,6 +13,7 @@ import android.widget.RadioButton;
 import com.example.patternapplication.R;
 import com.example.patternapplication.WeatherApplication;
 import com.example.patternapplication.presenter.IPresenter;
+import com.example.patternapplication.view.fragments.interfaces.IMapFragment;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;

@@ -21,8 +21,8 @@ import com.example.patternapplication.model.observable.MarkerDecorator;
 import com.example.patternapplication.model.observable.TemperatureDecorator;
 import com.example.patternapplication.view.IMainActivity;
 import com.example.patternapplication.view.adapters.PopupAdapter;
-import com.example.patternapplication.view.fragments.IListFragment;
-import com.example.patternapplication.view.fragments.IMapFragment;
+import com.example.patternapplication.view.fragments.interfaces.IListFragment;
+import com.example.patternapplication.view.fragments.interfaces.IMapFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -208,6 +208,11 @@ public class PresenterImpl implements IPresenter {
         if (googleMap != null) {
             mapFragment.addMarker(temp.getMarkerOptions());
         }
+    }
+
+    @Override
+    public List<MarkerDecorator> markerList() {
+        return markers;
     }
 
     @Override
