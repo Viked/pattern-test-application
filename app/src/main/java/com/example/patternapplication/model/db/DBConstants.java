@@ -22,13 +22,10 @@ public class DBConstants {
     public static final String COLUMN_MAIN_HUMIDITY = "main_humidity";
     public static final String COLUMN_MAIN_TEMP_MIN = "main_temp_min";
     public static final String COLUMN_MAIN_TEMP_MAX = "main_temp_max";
-    //public static final String COLUMN_MAIN_SEA_LEVEL = "main_sea_level";
-    //public static final String COLUMN_MAIN_GRND_LEVEL = "main_grnd_level";
     public static final String COLUMN_WIND_SPEED = "wind_speed";
     public static final String COLUMN_WIND_DEG = "wind_deg";
     public static final String COLUMN_CLOUDS = "clouds";
     public static final String COLUMN_DT = "dt";
-    //public static final String COLUMN_SYS_MESSAGE = "sys_message";
     public static final String COLUMN_SYS_COUNTRY = "sys_country";
     public static final String COLUMN_SYS_SUNRISE = "sys_sunrise";
     public static final String COLUMN_SYS_SUNSET = "sys_sunset";
@@ -61,6 +58,41 @@ public class DBConstants {
                     COLUMN_REQUEST_ID + " integer, " +
                     COLUMN_NAME + " text, " +
                     COLUMN_COD + " integer);";
+
+
+    public static String[] columns = {
+            COLUMN_ID,
+            COLUMN_TIME,
+            COLUMN_COORD_LON,
+            COLUMN_COORD_LAT,
+            COLUMN_WEATHER_ID,
+            COLUMN_WEATHER_MAIN,
+            COLUMN_WEATHER_DESCRIPTION,
+            COLUMN_WEATHER_ICON,
+            COLUMN_MAIN_TEMP,
+            COLUMN_MAIN_PRESSURE,
+            COLUMN_MAIN_HUMIDITY,
+            COLUMN_MAIN_TEMP_MIN,
+            COLUMN_MAIN_TEMP_MAX,
+            COLUMN_WIND_SPEED,
+            COLUMN_WIND_DEG,
+            COLUMN_CLOUDS,
+            COLUMN_DT,
+            COLUMN_SYS_COUNTRY,
+            COLUMN_SYS_SUNRISE,
+            COLUMN_SYS_SUNSET,
+            COLUMN_REQUEST_ID,
+            COLUMN_NAME,
+            COLUMN_COD
+    };
+
+    public static final String BUNDLE_ARG_SELECTION = "selection";
+    public static final String BUNDLE_ARG_SELECTIONS_ARGS = "selection_args";
+    public static final String BUNDLE_ARG_GROUP_BY = "group_by";
+    public static final String BUNDLE_ARG_HAVING = "having";
+    public static final String BUNDLE_ARG_ORDER_BY = "order_by";
+
+    public static final String order = " ASC";
 
 }
 

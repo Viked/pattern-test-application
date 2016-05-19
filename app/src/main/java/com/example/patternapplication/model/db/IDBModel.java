@@ -1,6 +1,7 @@
 package com.example.patternapplication.model.db;
 
 import android.database.Cursor;
+import android.os.Bundle;
 
 import com.example.patternapplication.model.data.RequestedWeather;
 
@@ -15,7 +16,7 @@ public interface IDBModel {
 
     Cursor getNewDBCursor();
 
-    Cursor getNewDBCursor(String sort);
+    Cursor getNewDBCursor(Bundle args);
 
     void addRec(RequestedWeather weather);
 

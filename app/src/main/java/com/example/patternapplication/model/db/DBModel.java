@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 
 import com.example.patternapplication.model.data.Clouds;
 import com.example.patternapplication.model.data.Coord;
@@ -26,59 +27,44 @@ public class DBModel implements IDBModel {
     private Cursor cursor;
 
     private DBHelper mDBHelper;
+
     private SQLiteDatabase mDB;
 
     public DBModel(Context ctx) {
         mCtx = ctx;
     }
 
+    @Override
     public void open() {
         mDBHelper = new DBHelper(mCtx, DBConstants.DB_NAME, null, DBConstants.DB_VERSION);
         mDB = mDBHelper.getWritableDatabase();
     }
 
+    @Override
     public void close() {
         if (mDBHelper != null) mDBHelper.close();
     }
 
     @Override
-    public Cursor getNewDBCursor(String sort) {
-        String[] columns = {
-                DBConstants.COLUMN_ID,
-                DBConstants.COLUMN_TIME,
-                DBConstants.COLUMN_COORD_LON,
-                DBConstants.COLUMN_COORD_LAT,
-                DBConstants.COLUMN_WEATHER_ID,
-                DBConstants.COLUMN_WEATHER_MAIN,
-                DBConstants.COLUMN_WEATHER_DESCRIPTION,
-                DBConstants.COLUMN_WEATHER_ICON,
-                DBConstants.COLUMN_MAIN_TEMP,
-                DBConstants.COLUMN_MAIN_PRESSURE,
-                DBConstants.COLUMN_MAIN_HUMIDITY,
-                DBConstants.COLUMN_MAIN_TEMP_MIN,
-                DBConstants.COLUMN_MAIN_TEMP_MAX,
-                DBConstants.COLUMN_WIND_SPEED,
-                DBConstants.COLUMN_WIND_DEG,
-                DBConstants.COLUMN_CLOUDS,
-                DBConstants.COLUMN_DT,
-                DBConstants.COLUMN_SYS_COUNTRY,
-                DBConstants.COLUMN_SYS_SUNRISE,
-                DBConstants.COLUMN_SYS_SUNSET,
-                DBConstants.COLUMN_REQUEST_ID,
-                DBConstants.COLUMN_NAME,
-                DBConstants.COLUMN_COD
-        };
+    public Cursor getNewDBCursor(Bundle args) {
 
-        this.cursor = mDB.query(DBConstants.DB_TABLE, columns,
-                null, null, null, null, sort);
-
+        if (args == null) {
+            this.cursor = mDB.query(DBConstants.DB_TABLE, DBConstants.columns,
+                    null, null, null, null, null);
+        } else {
+            this.cursor = mDB.query(DBConstants.DB_TABLE, DBConstants.columns,
+                    args.getString(DBConstants.BUNDLE_ARG_SELECTION),
+                    args.getStringArray(DBConstants.BUNDLE_ARG_SELECTIONS_ARGS),
+                    args.getString(DBConstants.BUNDLE_ARG_GROUP_BY),
+                    args.getString(DBConstants.BUNDLE_ARG_HAVING),
+                    args.getString(DBConstants.BUNDLE_ARG_ORDER_BY));
+        }
         return this.cursor;
     }
 
-
     @Override
     public Cursor getNewDBCursor() {
-        return getNewDBCursor(DBConstants.COLUMN_SYS_COUNTRY + " ASC");
+        return getNewDBCursor(null);
     }
 
     @Override

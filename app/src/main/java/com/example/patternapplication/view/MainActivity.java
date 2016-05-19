@@ -1,11 +1,9 @@
 package com.example.patternapplication.view;
 
-import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,11 +11,11 @@ import android.support.v7.widget.Toolbar;
 
 import com.example.patternapplication.R;
 import com.example.patternapplication.WeatherApplication;
-import com.example.patternapplication.model.db.IDBModel;
+import com.example.patternapplication.model.db.DBLoader;
 import com.example.patternapplication.presenter.IPresenter;
 import com.example.patternapplication.view.adapters.MyPagerAdapter;
 
-public class MainActivity extends AppCompatActivity implements IMainActivity, LoaderManager.LoaderCallbacks<Cursor>{
+public class MainActivity extends AppCompatActivity implements IMainActivity, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int MY_DB_ID = 0;
 
@@ -53,17 +51,17 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
     @Override
     protected void onResume() {
         super.onResume();
-        presenter = ((WeatherApplication)getApplication()).getPresenter();
+        presenter = ((WeatherApplication) getApplication()).getPresenter();
         presenter.setActivity(this);
     }
 
     @Override
-    public void reloadDB() {
-        getSupportLoaderManager().restartLoader(MY_DB_ID, null, this);
+    public void reloadDB(Bundle args) {
+        getSupportLoaderManager().restartLoader(MY_DB_ID, args, this);
     }
 
     @Override
-    public void loadDB(){
+    public void loadDB() {
         getSupportLoaderManager().initLoader(MY_DB_ID, null, this);
     }
 
@@ -79,24 +77,8 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new MyCursorLoader(this, presenter.getWeatherDB());
+        return new DBLoader(this, args, presenter.getWeatherDB());
     }
 
-
-    static class MyCursorLoader extends CursorLoader {
-
-        private IDBModel db;
-
-        public MyCursorLoader(Context context, IDBModel db) {
-            super(context);
-            this.db = db;
-        }
-
-        @Override
-        public Cursor loadInBackground() {
-            return db.getNewDBCursor();
-        }
-
-    }
 
 }

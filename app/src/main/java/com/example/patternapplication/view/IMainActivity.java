@@ -1,5 +1,6 @@
 package com.example.patternapplication.view;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 
 /**
@@ -9,7 +10,7 @@ public interface IMainActivity {
 
     void loadDB();
 
-    void reloadDB();
+    void reloadDB(Bundle args);
 
     LayoutInflater getLayoutInflater();
 
