@@ -168,7 +168,7 @@ public class PresenterImpl implements IPresenter {
         markers.add(decorator);
         return decorator;
     }
-
+/*
     private void updateWeather(double lat, double lon) {
         apiRequestInterface.getWeather(lat, lon)
                 .subscribeOn(Schedulers.newThread())
@@ -180,6 +180,7 @@ public class PresenterImpl implements IPresenter {
                         Throwable::printStackTrace);
 
     }
+*/
 
     private void updateView(RequestedWeather weather) {
         dataObservable.notifyObservers(weather);

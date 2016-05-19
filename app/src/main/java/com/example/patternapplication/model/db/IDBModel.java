@@ -26,4 +26,6 @@ public interface IDBModel {
 
     Cursor getDBCursor();
 
+    void closeDBCursor();
+
 }

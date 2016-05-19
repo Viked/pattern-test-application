@@ -8,7 +8,12 @@ import java.util.Locale;
 abstract public class Utils {
 
     public static String convertKelvin(Double k){
-        return String.format(Locale.getDefault(), "Текущаяя температура: %.2f", (k - 273.15));
+        return "Текущаяя температура: " +  roundDouble(k - 273.15);
     }
+
+    public static String roundDouble(Double d){
+        return String.format(Locale.getDefault(), "%.2f", d);
+    }
+
 
 }

@@ -63,8 +63,16 @@ public class DBModel implements IDBModel {
     }
 
     @Override
+    public void closeDBCursor() {
+        cursor.close();
+    }
+
+    @Override
     public Cursor getNewDBCursor() {
-        return getNewDBCursor(null);
+        Bundle args = new Bundle();
+        args.putString(DBConstants.BUNDLE_ARG_ORDER_BY,
+                DBConstants.COLUMN_SYS_COUNTRY + DBConstants.order);
+        return getNewDBCursor(args);
     }
 
     @Override
