@@ -20,7 +20,7 @@ public class MarkerListFragment extends BaseListFragment<MarkerAdapter> implemen
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        getPresenter().attachMarkerListFragment(this);
+        getPresenter().setMarkerListFragment(this);
     }
 
 
@@ -30,6 +30,12 @@ public class MarkerListFragment extends BaseListFragment<MarkerAdapter> implemen
         if(getPresenter() != null){
             getAdapter().setItems(getPresenter().getMarkerList());
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getPresenter().setMarkerListFragment(null);
     }
 
 

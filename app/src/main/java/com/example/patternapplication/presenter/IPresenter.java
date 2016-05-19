@@ -23,13 +23,13 @@ public interface IPresenter extends GoogleApiClient.ConnectionCallbacks, GoogleA
 
     void onDestroy();
 
-    void attachActivity(IMainActivity activity);
+    void setActivity(IMainActivity activity);
 
-    void attachMapFragment(IMapFragment mapFragment);
+    void setMapFragment(IMapFragment mapFragment);
 
-    void attachListFragment(IDBFragment listFragment);
+    void setDBFragment(IDBFragment listFragment);
 
-    void attachMarkerListFragment(IMarkerListFragment markerListFragment);
+    void setMarkerListFragment(IMarkerListFragment markerListFragment);
 
     IDBModel getWeatherDB();
 

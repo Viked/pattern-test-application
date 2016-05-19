@@ -18,7 +18,7 @@ public class DBFragment extends BaseListFragment<DBAdapter> implements IDBFragme
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        getPresenter().attachListFragment(this);
+        getPresenter().setDBFragment(this);
     }
 
     @Override
@@ -34,5 +34,11 @@ public class DBFragment extends BaseListFragment<DBAdapter> implements IDBFragme
         if(getPresenter() != null && getPresenter().getWeatherDB().getDBCursor() != null ){
             getAdapter().setItems(getPresenter().getWeatherDB().getDBCursor());
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getPresenter().setDBFragment(null);
     }
 }

@@ -94,7 +94,7 @@ public class PresenterImpl implements IPresenter {
     }
 
     @Override
-    public void attachActivity(IMainActivity activity) {
+    public void setActivity(IMainActivity activity) {
         this.activity = activity;
         if(dbModel.getDBCursor() == null) {
             activity.loadDB();
@@ -102,12 +102,12 @@ public class PresenterImpl implements IPresenter {
     }
 
     @Override
-    public void attachMapFragment(IMapFragment mapFragment) {
+    public void setMapFragment(IMapFragment mapFragment) {
         this.mapFragment = mapFragment;
     }
 
     @Override
-    public void attachListFragment(IDBFragment listFragment) {
+    public void setDBFragment(IDBFragment listFragment) {
         this.dbFragment = listFragment;
         /*
         if(dbModel.getDBCursor() != null){
@@ -117,7 +117,7 @@ public class PresenterImpl implements IPresenter {
     }
 
     @Override
-    public void attachMarkerListFragment(IMarkerListFragment markerListFragment) {
+    public void setMarkerListFragment(IMarkerListFragment markerListFragment) {
         this.markerListFragment = markerListFragment;
     }
 

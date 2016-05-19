@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
     protected void onResume() {
         super.onResume();
         presenter = ((WeatherApplication)getApplication()).getPresenter();
-        presenter.attachActivity(this);
+        presenter.setActivity(this);
     }
 
     @Override

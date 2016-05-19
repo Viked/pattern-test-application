@@ -12,16 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.patternapplication.R;
-import com.example.patternapplication.WeatherApplication;
-import com.example.patternapplication.presenter.IPresenter;
 import com.example.patternapplication.view.adapters.AbstractRecyclerViewAdapter;
 
 /**
  * Created by 1 on 19.05.2016.
  */
-public abstract class BaseListFragment<T extends AbstractRecyclerViewAdapter> extends Fragment {
-
-    private IPresenter presenter;
+public abstract class BaseListFragment<T extends AbstractRecyclerViewAdapter> extends BaseFragment {
 
     private T adapter;
 
@@ -29,10 +25,6 @@ public abstract class BaseListFragment<T extends AbstractRecyclerViewAdapter> ex
 
     public T getAdapter() {
         return adapter;
-    }
-
-    public IPresenter getPresenter() {
-        return presenter;
     }
 
     @Nullable
@@ -47,12 +39,6 @@ public abstract class BaseListFragment<T extends AbstractRecyclerViewAdapter> ex
         ((RecyclerView) view).setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = initialAdapter();
         ((RecyclerView) view).setAdapter(adapter);
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        presenter = ((WeatherApplication)context.getApplicationContext()).getPresenter();
     }
 
     public void notifyDataSetChanged(){
