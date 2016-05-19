@@ -10,21 +10,21 @@ import com.example.patternapplication.R;
 /**
  * Created by 1 on 19.05.2016.
  */
-public abstract class AbstractRecyclerViewAdapter<T, E extends AbstractViewHolder<T>, C> extends RecyclerView.Adapter<E> {
+public abstract class AbstractRecyclerViewAdapter<T, C> extends RecyclerView.Adapter<AbstractViewHolder<T>> {
 
-    public interface ViewHolderFactory<T, E extends AbstractViewHolder<T>> {
-        E create(View view);
+    public interface ViewHolderFactory<T> {
+        AbstractViewHolder<T> create(View view);
     }
 
     public abstract int getItemsSize(C items);
 
     public abstract T getItem(C items, int i);
 
-    private ViewHolderFactory<T, E> factory;
+    private ViewHolderFactory<T> factory;
 
     private C items;
 
-    public AbstractRecyclerViewAdapter(ViewHolderFactory<T, E> factory) {
+    public AbstractRecyclerViewAdapter(ViewHolderFactory<T> factory) {
         this.factory = factory;
     }
 
@@ -43,14 +43,14 @@ public abstract class AbstractRecyclerViewAdapter<T, E extends AbstractViewHolde
     }
 
     @Override
-    public E onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AbstractViewHolder<T> onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_lict_row, parent, false);
         return factory.create(view);
     }
 
     @Override
-    public void onBindViewHolder(E holder, int position) {
+    public void onBindViewHolder(AbstractViewHolder<T> holder, int position) {
         holder.bindData(getItem(items, position));
     }
 }

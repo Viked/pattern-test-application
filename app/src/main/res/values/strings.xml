@@ -5,5 +5,6 @@
     <string name="title_with_two_temperatures">With min/max t</string>
     <string name="title_bonus">Bonus</string>
     <string name="fragment_title_map">Map</string>
-    <string name="fragment_title_list">Weather list</string>
+    <string name="fragment_title_marker_list">Current markers</string>
+    <string name="fragment_title_db">Recent markers</string>
 </resources>

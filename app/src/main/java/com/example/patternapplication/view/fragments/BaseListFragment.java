@@ -15,7 +15,6 @@ import com.example.patternapplication.R;
 import com.example.patternapplication.WeatherApplication;
 import com.example.patternapplication.presenter.IPresenter;
 import com.example.patternapplication.view.adapters.AbstractRecyclerViewAdapter;
-import com.example.patternapplication.view.adapters.MarkerRecyclerViewAdapter;
 
 /**
  * Created by 1 on 19.05.2016.

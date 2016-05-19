@@ -36,7 +36,9 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String[] titles = new String[]{getString(R.string.fragment_title_map), getString(R.string.fragment_title_list)};
+        String[] titles = new String[]{getString(R.string.fragment_title_map),
+                getString(R.string.fragment_title_marker_list),
+                getString(R.string.fragment_title_db)};
         pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), titles);
 
         // Set up the ViewPager with the sections adapter.

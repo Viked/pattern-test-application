@@ -1,4 +1,4 @@
-package com.example.patternapplication.view.fragments.interfaces;
+package com.example.patternapplication.view.fragments.marker;
 
 import com.example.patternapplication.model.observable.MarkerDecorator;
 

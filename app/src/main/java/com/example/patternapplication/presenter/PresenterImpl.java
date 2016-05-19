@@ -21,8 +21,9 @@ import com.example.patternapplication.model.observable.MarkerDecorator;
 import com.example.patternapplication.model.observable.TemperatureDecorator;
 import com.example.patternapplication.view.IMainActivity;
 import com.example.patternapplication.view.adapters.PopupAdapter;
-import com.example.patternapplication.view.fragments.interfaces.IListFragment;
-import com.example.patternapplication.view.fragments.interfaces.IMapFragment;
+import com.example.patternapplication.view.fragments.db.IDBFragment;
+import com.example.patternapplication.view.fragments.map.IMapFragment;
+import com.example.patternapplication.view.fragments.marker.IMarkerListFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -48,7 +49,9 @@ public class PresenterImpl implements IPresenter {
 
     private IMainActivity activity;
 
-    private IListFragment listFragment;
+    private IDBFragment dbFragment;
+
+    private IMarkerListFragment markerListFragment;
 
     private IMapFragment mapFragment;
 
@@ -104,13 +107,18 @@ public class PresenterImpl implements IPresenter {
     }
 
     @Override
-    public void attachListFragment(IListFragment listFragment) {
-        this.listFragment = listFragment;
+    public void attachListFragment(IDBFragment listFragment) {
+        this.dbFragment = listFragment;
         /*
         if(dbModel.getDBCursor() != null){
-            listFragment.setList(dbModel.getDBCursor());
+            db.setList(dbModel.getDBCursor());
         }
         */
+    }
+
+    @Override
+    public void attachMarkerListFragment(IMarkerListFragment markerListFragment) {
+        this.markerListFragment = markerListFragment;
     }
 
     @Override
@@ -120,8 +128,8 @@ public class PresenterImpl implements IPresenter {
 
     @Override
     public void DBLoaded(Cursor cursor) {
-        if(listFragment != null) {
-            listFragment.setList(cursor);
+        if(dbFragment != null) {
+            dbFragment.setList(cursor);
         }
 
         /*
@@ -211,7 +219,7 @@ public class PresenterImpl implements IPresenter {
     }
 
     @Override
-    public List<MarkerDecorator> markerList() {
+    public List<MarkerDecorator> getMarkerList() {
         return markers;
     }
 

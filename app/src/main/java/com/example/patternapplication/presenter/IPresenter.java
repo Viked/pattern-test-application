@@ -5,9 +5,9 @@ import android.database.Cursor;
 import com.example.patternapplication.model.db.IDBModel;
 import com.example.patternapplication.model.observable.MarkerDecorator;
 import com.example.patternapplication.view.IMainActivity;
-import com.example.patternapplication.view.fragments.interfaces.IListFragment;
-import com.example.patternapplication.view.fragments.interfaces.IMapFragment;
-import com.example.patternapplication.view.fragments.interfaces.IMarkerListFragment;
+import com.example.patternapplication.view.fragments.db.IDBFragment;
+import com.example.patternapplication.view.fragments.map.IMapFragment;
+import com.example.patternapplication.view.fragments.marker.IMarkerListFragment;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
@@ -27,7 +27,7 @@ public interface IPresenter extends GoogleApiClient.ConnectionCallbacks, GoogleA
 
     void attachMapFragment(IMapFragment mapFragment);
 
-    void attachListFragment(IListFragment listFragment);
+    void attachListFragment(IDBFragment listFragment);
 
     void attachMarkerListFragment(IMarkerListFragment markerListFragment);
 
@@ -41,6 +41,6 @@ public interface IPresenter extends GoogleApiClient.ConnectionCallbacks, GoogleA
 
     void addLocation(LatLng latLng);
 
-    List<MarkerDecorator> markerList();
+    List<MarkerDecorator> getMarkerList();
 
 }
