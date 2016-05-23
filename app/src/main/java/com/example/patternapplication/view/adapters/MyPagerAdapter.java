@@ -25,7 +25,7 @@ public class MyPagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 return new MapFragment();
-            case 2:
+            case 1:
                 return new MarkerListFragment();
             default:
                 return new DBFragment();

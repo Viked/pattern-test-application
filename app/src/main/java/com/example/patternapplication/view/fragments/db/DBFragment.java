@@ -1,14 +1,13 @@
 package com.example.patternapplication.view.fragments.db;
 
-import android.content.Context;
-import android.database.Cursor;
 import com.example.patternapplication.view.fragments.BaseListFragment;
+
+import java.util.Observable;
 
 /**
  * Created by Initb on 18.05.2016.
  */
-public class DBFragment extends BaseListFragment<DBAdapter> implements IDBFragment {
-
+public class DBFragment extends BaseListFragment<DBAdapter> {
 
     @Override
     public DBAdapter initialAdapter() {
@@ -16,29 +15,7 @@ public class DBFragment extends BaseListFragment<DBAdapter> implements IDBFragme
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        getPresenter().setDBFragment(this);
-    }
-
-    @Override
-    public void setList(Cursor cursor) {
-        if(getAdapter() !=null) {
-            getAdapter().setItems(cursor);
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(getPresenter() != null && getPresenter().getWeatherDB().getDBCursor() != null ){
-            getAdapter().setItems(getPresenter().getWeatherDB().getDBCursor());
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getPresenter().setDBFragment(null);
+    public void update(Observable observable, Object data) {
+        getAdapter().setItems(getPresenter().getWeatherDB().getDBCursor());
     }
 }

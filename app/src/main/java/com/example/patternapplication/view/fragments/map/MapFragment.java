@@ -1,9 +1,7 @@
 package com.example.patternapplication.view.fragments.map;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,18 +9,19 @@ import android.widget.CompoundButton;
 import android.widget.RadioButton;
 
 import com.example.patternapplication.R;
-import com.example.patternapplication.WeatherApplication;
-import com.example.patternapplication.presenter.IPresenter;
+import com.example.patternapplication.model.observable.MarkerDecorator;
+import com.example.patternapplication.view.adapters.PopupAdapter;
 import com.example.patternapplication.view.fragments.BaseFragment;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.Observable;
 
 /**
  * Created by Initb on 18.05.2016.
  */
-public class MapFragment extends BaseFragment implements IMapFragment, OnMapReadyCallback {
+public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     private MapView mapView;
     private GoogleMap map;
@@ -56,12 +55,6 @@ public class MapFragment extends BaseFragment implements IMapFragment, OnMapRead
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        getPresenter().setMapFragment(this);
-    }
-
-    @Override
     public void onResume() {
         mapView.onResume();
         super.onResume();
@@ -82,34 +75,25 @@ public class MapFragment extends BaseFragment implements IMapFragment, OnMapRead
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         mapView.onDestroy();
-        getPresenter().setMapFragment(null);
-    }
-
-    @Override
-    public void addMarker(MarkerOptions options) {
-        map.addMarker(options).showInfoWindow();
-    }
-
-    @Override
-    public void clearMap() {
-        map.clear();
-    }
-
-    @Override
-    public void updateView(MarkerOptions[] markerOptionsArray) {
-        clearMap();
-        for (MarkerOptions marker : markerOptionsArray){
-            addMarker(marker);
-        }
+        super.onDestroy();
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        getPresenter().setMap(map = googleMap);
+        map = googleMap;
+        googleMap.setOnMapClickListener(getPresenter()::addLocation);
+        googleMap.setInfoWindowAdapter(new PopupAdapter(getActivity().getLayoutInflater()));
+        update(null, null);
     }
 
-
-
+    @Override
+    public void update(Observable observable, Object data) {
+        if(map!=null){
+            map.clear();
+            for (MarkerDecorator decorator : getPresenter().getMarkerList()){
+                map.addMarker(decorator.getMarkerOptions()).showInfoWindow();
+            }
+        }
+    }
 }

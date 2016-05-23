@@ -3,7 +3,6 @@ package com.example.patternapplication.presenter;
 import android.Manifest;
 import android.app.Application;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,19 +19,16 @@ import com.example.patternapplication.model.observable.BaseMarker;
 import com.example.patternapplication.model.observable.MarkerDecorator;
 import com.example.patternapplication.model.observable.TemperatureDecorator;
 import com.example.patternapplication.view.IMainActivity;
-import com.example.patternapplication.view.adapters.PopupAdapter;
-import com.example.patternapplication.view.fragments.db.IDBFragment;
-import com.example.patternapplication.view.fragments.map.IMapFragment;
-import com.example.patternapplication.view.fragments.marker.IMarkerListFragment;
+import com.example.patternapplication.view.fragments.BaseFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,15 +42,18 @@ public class PresenterImpl implements IPresenter {
     private static final long UPDATE_TIME_THRESHOLD = 600000;
     private static final long TIME_IN_DAY = 86400000;
 
+    private static Observable getObservable(){
+        return new Observable() {
+            @Override
+            public boolean hasChanged() {
+                return true;
+            }
+        };
+    }
+
     private Application context;
 
     private IMainActivity activity;
-
-    private IDBFragment dbFragment;
-
-    private IMarkerListFragment markerListFragment;
-
-    private IMapFragment mapFragment;
 
     private GoogleApiClient apiClient;
 
@@ -62,9 +61,9 @@ public class PresenterImpl implements IPresenter {
 
     private WeatherApiRequestInterface apiRequestInterface;
 
-    private java.util.Observable dataObservable;
+    private Observable dataObservable = getObservable();
 
-    private GoogleMap googleMap;
+    private Observable fragmentObservable  = getObservable();
 
     private List<MarkerDecorator> markers = new ArrayList<>();
 
@@ -85,13 +84,6 @@ public class PresenterImpl implements IPresenter {
         apiClient.connect();
         dbModel.open();
         apiRequestInterface = WeatherModel.create();
-        dataObservable = new java.util.Observable() {
-            @Override
-            public boolean hasChanged() {
-                return true;
-            }
-        };
-
     }
 
     @Override
@@ -103,23 +95,13 @@ public class PresenterImpl implements IPresenter {
     }
 
     @Override
-    public void setMapFragment(IMapFragment mapFragment) {
-        this.mapFragment = mapFragment;
+    public void addFragment(BaseFragment fragment) {
+        fragmentObservable.addObserver(fragment);
     }
 
     @Override
-    public void setDBFragment(IDBFragment listFragment) {
-        this.dbFragment = listFragment;
-        /*
-        if(dbModel.getDBCursor() != null){
-            db.setList(dbModel.getDBCursor());
-        }
-        */
-    }
-
-    @Override
-    public void setMarkerListFragment(IMarkerListFragment markerListFragment) {
-        this.markerListFragment = markerListFragment;
+    public void removeFragment(BaseFragment fragment) {
+        fragmentObservable.deleteObserver(fragment);
     }
 
     @Override
@@ -128,10 +110,8 @@ public class PresenterImpl implements IPresenter {
     }
 
     @Override
-    public void DBLoaded(Cursor cursor) {
-        if(dbFragment != null) {
-            dbFragment.setList(cursor);
-        }
+    public void update() {
+        fragmentObservable.notifyObservers(null);
 
         /*
         if (cursor != null) {
@@ -183,25 +163,11 @@ public class PresenterImpl implements IPresenter {
     }
 */
 
-    private void updateView(RequestedWeather weather) {
-        dataObservable.notifyObservers(weather);
-        mapFragment.updateView(getMarkerOptionsArray());
-    }
-
     @Override
     public void setMode(String string) {
         mode = Integer.parseInt(string);
     }
 
-    @Override
-    public void setMap(GoogleMap googleMap) {
-        this.googleMap = googleMap;
-        googleMap.setOnMapClickListener(this::addLocation);
-        for (MarkerDecorator decorator : markers) {
-            mapFragment.addMarker(decorator.getMarkerOptions());
-        }
-        googleMap.setInfoWindowAdapter(new PopupAdapter(activity.getLayoutInflater()));
-    }
 
     @Override
     public void addLocation(LatLng latLng) {
@@ -210,9 +176,11 @@ public class PresenterImpl implements IPresenter {
         weatherCall.enqueue(new Callback<RequestedWeather>() {
             @Override
             public void onResponse(Call<RequestedWeather> call, Response<RequestedWeather> response) {
-                temp.setWeather(response.body());
-                dbModel.addRec(response.body());
-                updateView(response.body());
+                RequestedWeather weather = response.body();
+                temp.setWeather(weather);
+                dbModel.addRec(weather);
+                dataObservable.notifyObservers(weather);
+                update();
             }
 
             @Override
@@ -220,9 +188,6 @@ public class PresenterImpl implements IPresenter {
                 t.printStackTrace();
             }
         });
-        if (googleMap != null) {
-            mapFragment.addMarker(temp.getMarkerOptions());
-        }
     }
 
     @Override
@@ -249,13 +214,4 @@ public class PresenterImpl implements IPresenter {
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
-
-    private MarkerOptions[] getMarkerOptionsArray(){
-        MarkerOptions[] markers = new MarkerOptions[this.markers.size()];
-        for (int i = 0; i < markers.length; i++){
-            markers[i] = this.markers.get(i).getMarkerOptions();
-        }
-        return markers;
-    }
-
 }

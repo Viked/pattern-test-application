@@ -1,16 +1,13 @@
 package com.example.patternapplication.view.fragments.marker;
 
-import android.content.Context;
-
-import com.example.patternapplication.model.observable.MarkerDecorator;
 import com.example.patternapplication.view.fragments.BaseListFragment;
 
-import java.util.List;
+import java.util.Observable;
 
 /**
  * Created by 1 on 19.05.2016.
  */
-public class MarkerListFragment extends BaseListFragment<MarkerAdapter> implements IMarkerListFragment {
+public class MarkerListFragment extends BaseListFragment<MarkerAdapter> {
 
     @Override
     public MarkerAdapter initialAdapter() {
@@ -18,36 +15,7 @@ public class MarkerListFragment extends BaseListFragment<MarkerAdapter> implemen
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        getPresenter().setMarkerListFragment(this);
+    public void update(Observable observable, Object data) {
+        getAdapter().setItems(getPresenter().getMarkerList());
     }
-
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(getPresenter() != null){
-            getAdapter().setItems(getPresenter().getMarkerList());
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        getPresenter().setMarkerListFragment(null);
-    }
-
-
-    @Override
-    public void setMarkers(List<MarkerDecorator> list) {
-        getAdapter().setItems(list);
-    }
-
-    @Override
-    public void addMarker() {
-        notifyDataSetChanged();
-    }
-
-
 }

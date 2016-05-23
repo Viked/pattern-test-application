@@ -1,15 +1,10 @@
 package com.example.patternapplication.presenter;
 
-import android.database.Cursor;
-
 import com.example.patternapplication.model.db.IDBModel;
 import com.example.patternapplication.model.observable.MarkerDecorator;
 import com.example.patternapplication.view.IMainActivity;
-import com.example.patternapplication.view.fragments.db.IDBFragment;
-import com.example.patternapplication.view.fragments.map.IMapFragment;
-import com.example.patternapplication.view.fragments.marker.IMarkerListFragment;
+import com.example.patternapplication.view.fragments.BaseFragment;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -25,19 +20,15 @@ public interface IPresenter extends GoogleApiClient.ConnectionCallbacks, GoogleA
 
     void setActivity(IMainActivity activity);
 
-    void setMapFragment(IMapFragment mapFragment);
+    void addFragment(BaseFragment fragment);
 
-    void setDBFragment(IDBFragment listFragment);
-
-    void setMarkerListFragment(IMarkerListFragment markerListFragment);
+    void removeFragment(BaseFragment fragment);
 
     IDBModel getWeatherDB();
 
-    void DBLoaded(Cursor cursor);
+    void update();
 
     void setMode(String string);
-
-    void setMap(GoogleMap googleMap);
 
     void addLocation(LatLng latLng);
 
