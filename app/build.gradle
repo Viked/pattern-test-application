@@ -7,12 +7,11 @@ android {
 
     defaultConfig {
         applicationId "com.example.patternapplication"
-        minSdkVersion 15
+        minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
 //        testInstrumentationRunner = "android.support.test.runner.AndroidJUnitRunner"
-        multiDexEnabled true
     }
 
     compileOptions {
@@ -22,7 +21,7 @@ android {
 
     dexOptions {
         incremental true
-        javaMaxHeapSize "4g"
+        javaMaxHeapSize "1g"
     }
 
     buildTypes {
@@ -30,6 +29,13 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            debuggable true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
     }
 }
 
@@ -42,15 +48,10 @@ dependencies {
     compile 'com.android.support:support-v4:23.4.0'
     compile 'com.android.support:recyclerview-v7:23.4.0'
     compile 'com.squareup.retrofit2:retrofit:2.0.2'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
-    compile 'io.reactivex:rxjava:1.1.5'
-    compile 'io.reactivex:rxandroid:1.2.0'
 
    // androidTestCompile 'junit:junit:4.12'
     //androidTestCompile 'com.android.support.test:runner:0.5'
     //androidTestCompile 'com.android.support.test:rules:0.5'
 
-    compile 'com.android.support:multidex:1.0.1'
 }

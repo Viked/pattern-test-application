@@ -34,8 +34,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Initb on 13.05.2016.
@@ -205,15 +206,20 @@ public class PresenterImpl implements IPresenter {
     @Override
     public void addLocation(LatLng latLng) {
         MarkerDecorator temp = initial(latLng);
-        apiRequestInterface.getWeather(latLng.latitude, latLng.longitude)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(weather -> {
-                            temp.setWeather(weather);
-                            dbModel.addRec(weather);
-                            updateView(weather);
-                        },
-                        Throwable::printStackTrace);
+        Call<RequestedWeather> weatherCall = apiRequestInterface.getWeather(latLng.latitude, latLng.longitude);
+        weatherCall.enqueue(new Callback<RequestedWeather>() {
+            @Override
+            public void onResponse(Call<RequestedWeather> call, Response<RequestedWeather> response) {
+                temp.setWeather(response.body());
+                dbModel.addRec(response.body());
+                updateView(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<RequestedWeather> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
         if (googleMap != null) {
             mapFragment.addMarker(temp.getMarkerOptions());
         }

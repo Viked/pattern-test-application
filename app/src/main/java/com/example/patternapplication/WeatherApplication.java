@@ -1,6 +1,6 @@
 package com.example.patternapplication;
 
-import android.support.multidex.MultiDexApplication;
+import android.app.Application;
 
 import com.example.patternapplication.presenter.IPresenter;
 import com.example.patternapplication.presenter.PresenterImpl;
@@ -8,7 +8,7 @@ import com.example.patternapplication.presenter.PresenterImpl;
 /**
  * Created by Initb on 13.05.2016.
  */
-public class WeatherApplication extends MultiDexApplication {
+public class WeatherApplication extends Application {
 
     private IPresenter presenter;
 
