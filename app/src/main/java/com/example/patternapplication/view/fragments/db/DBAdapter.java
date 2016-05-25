@@ -4,16 +4,12 @@ import android.database.Cursor;
 
 import com.example.patternapplication.model.data.RequestedWeather;
 import com.example.patternapplication.model.db.Utils;
-import com.example.patternapplication.model.observable.MarkerDecorator;
 import com.example.patternapplication.view.adapters.AbstractRecyclerViewAdapter;
-import com.example.patternapplication.view.fragments.marker.MarkerViewHolder;
-
-import java.util.List;
 
 /**
  * Created by 1 on 19.05.2016.
  */
-public class DBAdapter extends AbstractRecyclerViewAdapter<RequestedWeather,Cursor> {
+public class DBAdapter extends AbstractRecyclerViewAdapter<RequestedWeather, Cursor> {
 
     public DBAdapter(ViewHolderFactory<RequestedWeather> factory) {
         super(factory);
@@ -22,7 +18,7 @@ public class DBAdapter extends AbstractRecyclerViewAdapter<RequestedWeather,Curs
     @Override
     public RequestedWeather getItem(Cursor items, int i) {
         items.moveToPosition(i);
-        return  Utils.parseCursor(items);
+        return Utils.parseCursor(items);
     }
 
     @Override

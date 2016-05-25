@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by 1 on 19.05.2016.
  */
-public class MarkerAdapter extends AbstractRecyclerViewAdapter<MarkerDecorator,List<MarkerDecorator>> {
+public class MarkerAdapter extends AbstractRecyclerViewAdapter<MarkerDecorator, List<MarkerDecorator>> {
 
     public MarkerAdapter(ViewHolderFactory<MarkerDecorator> factory) {
         super(factory);

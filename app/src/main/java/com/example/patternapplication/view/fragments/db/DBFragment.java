@@ -1,7 +1,14 @@
 package com.example.patternapplication.view.fragments.db;
 
 import android.database.Cursor;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
+import com.example.patternapplication.R;
+import com.example.patternapplication.model.data.RequestedWeather;
+import com.example.patternapplication.model.data.Utils;
+import com.example.patternapplication.view.adapters.AbstractViewHolder;
 import com.example.patternapplication.view.fragments.BaseListFragment;
 
 import java.util.Observable;
@@ -22,4 +29,34 @@ public class DBFragment extends BaseListFragment<DBAdapter> {
             getAdapter().setItems((Cursor) data);
         }
     }
+
+    public class DBViewHolder extends AbstractViewHolder<RequestedWeather> {
+
+
+        public DBViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        public void bindData(RequestedWeather data) {
+            super.bindData(data);
+            String text = data.getSys().getCountry() + " "
+                    + Utils.convertKelvin(data.getMain().getTemp());
+            getTextView().setText(text);
+            getImageView().setImageResource(R.drawable.weather_cloudy);
+
+        }
+
+        @Override
+        public void bindView() {
+            getDeleteButton().setOnClickListener(v -> {
+                getPresenter().getWeatherDB().deleteRec((RequestedWeather) itemView.getTag());
+                getAdapter().notifyDataSetChanged();
+            });
+            getViewButton().setOnClickListener(v->{
+
+            });
+        }
+    }
+
 }
