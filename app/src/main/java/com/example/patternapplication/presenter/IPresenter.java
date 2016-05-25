@@ -1,5 +1,7 @@
 package com.example.patternapplication.presenter;
 
+import android.database.Cursor;
+
 import com.example.patternapplication.model.db.IDBModel;
 import com.example.patternapplication.model.observable.MarkerDecorator;
 import com.example.patternapplication.view.IMainActivity;
@@ -12,7 +14,7 @@ import java.util.List;
 /**
  * Created by 1 on 15.05.2016.
  */
-public interface IPresenter extends GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public interface IPresenter {
 
     void onCreate();
 
@@ -26,7 +28,7 @@ public interface IPresenter extends GoogleApiClient.ConnectionCallbacks, GoogleA
 
     IDBModel getWeatherDB();
 
-    void update();
+    void update(Object data);
 
     void setMode(String string);
 

@@ -1,5 +1,7 @@
 package com.example.patternapplication.view.fragments.db;
 
+import android.database.Cursor;
+
 import com.example.patternapplication.view.fragments.BaseListFragment;
 
 import java.util.Observable;
@@ -16,6 +18,8 @@ public class DBFragment extends BaseListFragment<DBAdapter> {
 
     @Override
     public void update(Observable observable, Object data) {
-        getAdapter().setItems(getPresenter().getWeatherDB().getDBCursor());
+        if(data != null && data instanceof Cursor) {
+            getAdapter().setItems((Cursor) data);
+        }
     }
 }

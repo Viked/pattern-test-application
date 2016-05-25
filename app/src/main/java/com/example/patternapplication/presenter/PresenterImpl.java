@@ -1,13 +1,6 @@
 package com.example.patternapplication.presenter;
 
-import android.Manifest;
 import android.app.Application;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 
 import com.example.patternapplication.model.WeatherApiRequestInterface;
 import com.example.patternapplication.model.WeatherModel;
@@ -20,11 +13,7 @@ import com.example.patternapplication.model.observable.MarkerDecorator;
 import com.example.patternapplication.model.observable.TemperatureDecorator;
 import com.example.patternapplication.view.IMainActivity;
 import com.example.patternapplication.view.fragments.BaseFragment;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +31,7 @@ public class PresenterImpl implements IPresenter {
     private static final long UPDATE_TIME_THRESHOLD = 600000;
     private static final long TIME_IN_DAY = 86400000;
 
-    private static Observable getObservable(){
+    private static Observable getObservable() {
         return new Observable() {
             @Override
             public boolean hasChanged() {
@@ -55,15 +44,13 @@ public class PresenterImpl implements IPresenter {
 
     private IMainActivity activity;
 
-    private GoogleApiClient apiClient;
-
     private DBModel dbModel;
 
     private WeatherApiRequestInterface apiRequestInterface;
 
     private Observable dataObservable = getObservable();
 
-    private Observable fragmentObservable  = getObservable();
+    private Observable fragmentObservable = getObservable();
 
     private List<MarkerDecorator> markers = new ArrayList<>();
 
@@ -71,17 +58,11 @@ public class PresenterImpl implements IPresenter {
 
     public PresenterImpl(Application context) {
         this.context = context;
-        apiClient = new GoogleApiClient.Builder(context)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
         dbModel = new DBModel(context);
     }
 
     @Override
     public void onCreate() {
-        apiClient.connect();
         dbModel.open();
         apiRequestInterface = WeatherModel.create();
     }
@@ -89,7 +70,7 @@ public class PresenterImpl implements IPresenter {
     @Override
     public void setActivity(IMainActivity activity) {
         this.activity = activity;
-        if(dbModel.getDBCursor() == null) {
+        if (dbModel.getDBCursor() == null) {
             activity.loadDB();
         }
     }
@@ -110,8 +91,12 @@ public class PresenterImpl implements IPresenter {
     }
 
     @Override
-    public void update() {
-        fragmentObservable.notifyObservers(null);
+    public void update(Object data) {
+        fragmentObservable.notifyObservers(data);
+        if (data == null) {
+            activity.reloadDB(null);
+        }
+
 
         /*
         if (cursor != null) {
@@ -134,7 +119,6 @@ public class PresenterImpl implements IPresenter {
     @Override
     public void onDestroy() {
         dbModel.close();
-        apiClient.disconnect();
     }
 
     public MarkerDecorator initial(LatLng latLng) {
@@ -180,7 +164,7 @@ public class PresenterImpl implements IPresenter {
                 temp.setWeather(weather);
                 dbModel.addRec(weather);
                 dataObservable.notifyObservers(weather);
-                update();
+                update(null);
             }
 
             @Override
@@ -193,25 +177,5 @@ public class PresenterImpl implements IPresenter {
     @Override
     public List<MarkerDecorator> getMarkerList() {
         return markers;
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
-            if (mLastLocation != null) {
-                addLocation(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
-            }
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 }
