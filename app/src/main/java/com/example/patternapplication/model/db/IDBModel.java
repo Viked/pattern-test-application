@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 
 import com.example.patternapplication.model.data.RequestedWeather;
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by Initb on 18.05.2016.
@@ -28,4 +29,5 @@ public interface IDBModel {
 
     void closeDBCursor();
 
+    RequestedWeather getWeatherByCoordinates(LatLng latLng, double e);
 }

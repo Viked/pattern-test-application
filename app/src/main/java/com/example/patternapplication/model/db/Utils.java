@@ -10,6 +10,7 @@ import com.example.patternapplication.model.data.RequestedWeather;
 import com.example.patternapplication.model.data.Sys;
 import com.example.patternapplication.model.data.Weather;
 import com.example.patternapplication.model.data.Wind;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,6 +33,11 @@ abstract public class Utils {
 
     public static RequestedWeather parseCursor(Cursor cursor) {
         RequestedWeather requestedWeather = new RequestedWeather();
+
+        Long lat = cursor.getLong(cursor.getColumnIndex(DBConstants.COLUMN_LAT));
+        Long lng = cursor.getLong(cursor.getColumnIndex(DBConstants.COLUMN_LNG));
+        requestedWeather.setMapCoordinates(new LatLng(lat, lng));
+
         requestedWeather.setId(cursor.getLong(cursor.getColumnIndex(DBConstants.COLUMN_REQUEST_ID)));
         requestedWeather.setName(cursor.getString(cursor.getColumnIndex(DBConstants.COLUMN_NAME)));
         requestedWeather.setCod(cursor.getLong(cursor.getColumnIndex(DBConstants.COLUMN_COD)));
@@ -77,7 +83,7 @@ abstract public class Utils {
         return requestedWeather;
     }
 
-    public static ContentValues getWeatherContentValue(RequestedWeather weather){
+    public static ContentValues getWeatherContentValue(RequestedWeather weather) {
         ContentValues cv = new ContentValues();
 
         Long time = weather.getTime();
@@ -94,6 +100,14 @@ abstract public class Utils {
         }
         cv.put(DBConstants.COLUMN_COORD_LON, coord.getLon());
         cv.put(DBConstants.COLUMN_COORD_LAT, coord.getLat());
+
+        LatLng latLng = weather.getMapCoordinates();
+        if (latLng == null) {
+            latLng = new LatLng(coord.getLat(), coord.getLon());
+            weather.setMapCoordinates(latLng);
+        }
+        cv.put(DBConstants.COLUMN_LNG, latLng.longitude);
+        cv.put(DBConstants.COLUMN_LAT, latLng.latitude);
 
         List<Weather> w = weather.getWeather();
         if (w.isEmpty()) {

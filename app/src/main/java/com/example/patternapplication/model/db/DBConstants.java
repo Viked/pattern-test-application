@@ -33,10 +33,15 @@ public class DBConstants {
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_COD = "cod";
 
+    public static final String COLUMN_LAT = "lat";
+    public static final String COLUMN_LNG = "lon";
+
     public static final String DB_CREATE =
             "create table " + DB_TABLE + "(" +
                     COLUMN_ID + " integer primary key autoincrement, " +
                     COLUMN_TIME + " real, " +
+                    COLUMN_LAT + " real, " +
+                    COLUMN_LNG + " real, " +
                     COLUMN_COORD_LON + " real, " +
                     COLUMN_COORD_LAT + " real, " +
                     COLUMN_WEATHER_ID + " integer, " +
@@ -63,6 +68,8 @@ public class DBConstants {
     public static String[] columns = {
             COLUMN_ID,
             COLUMN_TIME,
+            COLUMN_LAT,
+            COLUMN_LNG,
             COLUMN_COORD_LON,
             COLUMN_COORD_LAT,
             COLUMN_WEATHER_ID,

@@ -1,5 +1,7 @@
 package com.example.patternapplication.model.data;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,16 @@ public class RequestedWeather {
     private Long cod = 0L;
 
     private Long time = 0L;
+
+    private LatLng mapCoordinates = new LatLng(0, 0);
+
+    public void setMapCoordinates(LatLng mapCoordinates) {
+        this.mapCoordinates = mapCoordinates;
+    }
+
+    public LatLng getMapCoordinates() {
+        return mapCoordinates;
+    }
 
     public Long getTime() {
         return time;

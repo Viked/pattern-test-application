@@ -16,6 +16,7 @@ import com.example.patternapplication.view.fragments.BaseFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Observable;
 
@@ -29,7 +30,8 @@ import retrofit2.Response;
 public class PresenterImpl implements IPresenter {
 
     private static final long UPDATE_TIME_THRESHOLD = 600000;
-    private static final long TIME_IN_DAY = 86400000;
+    private static final double COORDINATE_ERROR = 0.5;
+
 
     private static Observable getObservable() {
         return new Observable() {
@@ -96,24 +98,6 @@ public class PresenterImpl implements IPresenter {
         if (data == null) {
             activity.reloadDB(null);
         }
-
-
-        /*
-        if (cursor != null) {
-            if (cursor.getCount() > 0) {
-                Long currentTime = Calendar.getInstance().getTimeInMillis();
-                for (RequestedWeather weather : dbModel.getDataList(cursor)) {
-                    Long time = currentTime - weather.getTime();
-                    if (time > UPDATE_TIME_THRESHOLD && time < TIME_IN_DAY) {
-                        updateWeather(weather.getCoord().getLat(), weather.getCoord().getLon());
-                    } else {
-                        updateView(weather);
-                    }
-                }
-            }
-            cursor.close();
-        }*/
-
     }
 
     @Override
@@ -133,49 +117,64 @@ public class PresenterImpl implements IPresenter {
         markers.add(decorator);
         return decorator;
     }
-/*
-    private void updateWeather(double lat, double lon) {
-        apiRequestInterface.getWeather(lat, lon)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(weather -> {
-                            dbModel.addRec(weather);
-                            updateView(weather);
-                        },
-                        Throwable::printStackTrace);
-
-    }
-*/
 
     @Override
     public void setMode(String string) {
         mode = Integer.parseInt(string);
     }
 
-
     @Override
     public void addLocation(LatLng latLng) {
         MarkerDecorator temp = initial(latLng);
-        Call<RequestedWeather> weatherCall = apiRequestInterface.getWeather(latLng.latitude, latLng.longitude);
-        weatherCall.enqueue(new Callback<RequestedWeather>() {
-            @Override
-            public void onResponse(Call<RequestedWeather> call, Response<RequestedWeather> response) {
-                RequestedWeather weather = response.body();
+        RequestedWeather weather = dbModel.getWeatherByCoordinates(latLng, COORDINATE_ERROR);
+        if (weather != null) {
+            long time = Calendar.getInstance().getTimeInMillis() - weather.getTime();
+            if (time < UPDATE_TIME_THRESHOLD) {
                 temp.setWeather(weather);
-                dbModel.addRec(weather);
                 dataObservable.notifyObservers(weather);
                 update(null);
-            }
+            } else {
+                Call<RequestedWeather> weatherCall = apiRequestInterface.getWeather(latLng.latitude, latLng.longitude);
+                weatherCall.enqueue(new Callback<RequestedWeather>() {
+                    @Override
+                    public void onResponse(Call<RequestedWeather> call, Response<RequestedWeather> response) {
+                        RequestedWeather weather = response.body();
+                        temp.setWeather(weather);
+                        dbModel.editRec(weather);
+                        dataObservable.notifyObservers(weather);
+                        update(null);
+                    }
 
-            @Override
-            public void onFailure(Call<RequestedWeather> call, Throwable t) {
-                t.printStackTrace();
+                    @Override
+                    public void onFailure(Call<RequestedWeather> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
             }
-        });
+        } else {
+            Call<RequestedWeather> weatherCall = apiRequestInterface.getWeather(latLng.latitude, latLng.longitude);
+            weatherCall.enqueue(new Callback<RequestedWeather>() {
+                @Override
+                public void onResponse(Call<RequestedWeather> call, Response<RequestedWeather> response) {
+                    RequestedWeather weather = response.body();
+                    weather.setMapCoordinates(latLng);
+                    temp.setWeather(weather);
+                    dbModel.addRec(weather);
+                    dataObservable.notifyObservers(weather);
+                    update(null);
+                }
+
+                @Override
+                public void onFailure(Call<RequestedWeather> call, Throwable t) {
+                    t.printStackTrace();
+                }
+            });
+        }
     }
 
     @Override
     public List<MarkerDecorator> getMarkerList() {
         return markers;
     }
+
 }

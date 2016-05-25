@@ -1,21 +1,14 @@
 package com.example.patternapplication.model.db;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
-import com.example.patternapplication.model.data.Clouds;
-import com.example.patternapplication.model.data.Coord;
-import com.example.patternapplication.model.data.Main;
 import com.example.patternapplication.model.data.RequestedWeather;
-import com.example.patternapplication.model.data.Sys;
-import com.example.patternapplication.model.data.Weather;
-import com.example.patternapplication.model.data.Wind;
+import com.google.android.gms.maps.model.LatLng;
 
-import java.util.Calendar;
-import java.util.List;
+import static com.example.patternapplication.model.db.Utils.parseCursor;
 
 /**
  * Created by Initb on 26.04.2016.
@@ -97,8 +90,25 @@ public class DBModel implements IDBModel {
     @Override
     public void deleteRec(RequestedWeather weather) {
         if (weather != null) {
-            mDB.delete(DBConstants.DB_TABLE, DBConstants.COLUMN_TIME + " = " + weather.getTime(), null);
+            mDB.delete(DBConstants.DB_TABLE, DBConstants.COLUMN_ID + " = " + weather.getId(), null);
         }
     }
 
+    @Override
+    public RequestedWeather getWeatherByCoordinates(LatLng latLng, double e) {
+        if (cursor != null && !cursor.isClosed() && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            do {
+                RequestedWeather weather = parseCursor(cursor);
+                LatLng coordinates = weather.getMapCoordinates();
+                double eX = Math.abs(coordinates.latitude - latLng.latitude) +
+                        Math.abs(coordinates.longitude - latLng.longitude);
+                if (eX < e) {
+                    return weather;
+                }
+            } while (cursor.moveToNext());
+
+        }
+        return null;
+    }
 }
