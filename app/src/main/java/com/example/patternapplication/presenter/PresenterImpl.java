@@ -56,6 +56,8 @@ public class PresenterImpl implements IPresenter {
 
     private List<MarkerDecorator> markers = new ArrayList<>();
 
+    private MarkerDecorator activeMarker = null;
+
     private int mode = 0;
 
     public PresenterImpl(Application context) {
@@ -117,6 +119,7 @@ public class PresenterImpl implements IPresenter {
         }
         dataObservable.addObserver((BaseDecorator) decorator);
         markers.add(decorator);
+        activeMarker = decorator;
         return decorator;
     }
 
@@ -183,5 +186,21 @@ public class PresenterImpl implements IPresenter {
     public void deleteMarker(MarkerDecorator marker) {
         markers.remove(marker);
         update();
+    }
+
+    @Override
+    public void showMarker(Object marker) {
+        if (marker instanceof MarkerDecorator) {
+            activeMarker = (MarkerDecorator) marker;
+            update();
+        } else if (marker instanceof RequestedWeather) {
+            RequestedWeather weather = (RequestedWeather) marker;
+            addLocation(weather.getMapCoordinates());
+        }
+    }
+
+    @Override
+    public MarkerDecorator getActiveMarker() {
+        return activeMarker;
     }
 }

@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import com.example.patternapplication.R;
 import com.example.patternapplication.WeatherApplication;
 import com.example.patternapplication.model.db.DBLoader;
+import com.example.patternapplication.model.observable.MarkerDecorator;
 import com.example.patternapplication.presenter.IPresenter;
 import com.example.patternapplication.view.adapters.MyPagerAdapter;
 import com.google.android.gms.common.ConnectionResult;

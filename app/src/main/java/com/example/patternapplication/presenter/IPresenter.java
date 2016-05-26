@@ -36,4 +36,8 @@ public interface IPresenter {
     List<MarkerDecorator> getMarkerList();
 
     void deleteMarker(MarkerDecorator marker);
+
+    void showMarker(Object marker);
+
+    MarkerDecorator getActiveMarker();
 }

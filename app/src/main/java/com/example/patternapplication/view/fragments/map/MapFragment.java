@@ -15,7 +15,10 @@ import com.example.patternapplication.view.fragments.BaseFragment;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
+import java.util.List;
 import java.util.Observable;
 
 /**
@@ -84,15 +87,20 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
         map = googleMap;
         googleMap.setOnMapClickListener(getPresenter()::addLocation);
         googleMap.setInfoWindowAdapter(new PopupAdapter(getActivity().getLayoutInflater()));
-        update(null, null);
+        getPresenter().requestUpdate();
     }
 
     @Override
     public void update(Observable observable, Object data) {
         if(map!=null){
             map.clear();
-            for (MarkerDecorator decorator : getPresenter().getMarkerList()){
-                map.addMarker(decorator.getMarkerOptions()).showInfoWindow();
+            if(getPresenter().getMarkerList().size()>0) {
+                for (MarkerDecorator decorator : getPresenter().getMarkerList()) {
+                    Marker marker = map.addMarker(decorator.getMarkerOptions());
+                    if(decorator.getLocation().equals(getPresenter().getActiveMarker().getLocation())){
+                        marker.showInfoWindow();
+                    }
+                }
             }
         }
     }

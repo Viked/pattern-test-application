@@ -44,15 +44,14 @@ public class MarkerListFragment extends BaseListFragment<MarkerAdapter> {
         }
 
         @Override
-        public View.OnClickListener deleteButtonOnClick() {
-            return (v -> {
-                getPresenter().deleteMarker((MarkerDecorator) itemView.getTag());
-            });
+        public void deleteAction() {
+            getPresenter().deleteMarker((MarkerDecorator) itemView.getTag());
         }
 
         @Override
-        public View.OnClickListener viewButtonOnClick() {
-            return null;
+        public void bindView() {
+            itemView.setOnClickListener(v -> getPresenter().showMarker(v.getTag()));
         }
+
     }
 }

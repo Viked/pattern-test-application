@@ -24,7 +24,7 @@ public class DBFragment extends BaseListFragment<DBAdapter> {
     @Override
     public void update(Observable observable, Object data) {
         Cursor cursor = getPresenter().getWeatherDB().getDBCursor();
-        if(cursor!=null) {
+        if (cursor != null) {
             getAdapter().setItems(cursor);
         }
     }
@@ -47,16 +47,14 @@ public class DBFragment extends BaseListFragment<DBAdapter> {
         }
 
         @Override
-        public View.OnClickListener deleteButtonOnClick() {
-            return (v -> {
-                getPresenter().getWeatherDB().deleteRec((RequestedWeather) itemView.getTag());
-                getPresenter().requestUpdate();
-            });
+        public void deleteAction() {
+            getPresenter().getWeatherDB().deleteRec((RequestedWeather) itemView.getTag());
+            getPresenter().requestUpdate();
         }
 
         @Override
-        public View.OnClickListener viewButtonOnClick() {
-            return null;
+        public void bindView() {
+            itemView.setOnClickListener(v -> getPresenter().showMarker(v.getTag()));
         }
     }
 

@@ -3,64 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <RelativeLayout
-        android:id="@+id/swipable_content"
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="16dp" />
+
+    <TextView
+        android:id="@+id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true">
-
-        <ImageView
-            android:id="@+id/image"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_margin="16dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true" />
-
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_toRightOf="@+id/image" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/content_delete_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:gravity="center_vertical"
-        android:visibility="gone">
+        android:layout_toRightOf="@+id/image" />
 
-        <ImageButton
-            android:id="@+id/delete_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="16dp"
-            android:src="@drawable/delete"
-            android:background="?android:attr/selectableItemBackground"/>
-    </RelativeLayout>
-
-
-    <RelativeLayout
-        android:id="@+id/content_view_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:gravity="center_vertical"
-        android:visibility="gone">
-
-        <ImageButton
-            android:id="@+id/view_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:padding="16dp"
-            android:src="@drawable/eye"
-            android:background="?android:attr/selectableItemBackground"
-            />
-    </RelativeLayout>
 </RelativeLayout>
+
 
