@@ -80,11 +80,15 @@ abstract public class Utils {
         clouds.setAll(cursor.getLong(cursor.getColumnIndex(DBConstants.COLUMN_CLOUDS)));
         requestedWeather.setClouds(clouds);
 
+        requestedWeather.setId(cursor.getLong(cursor.getColumnIndex(DBConstants.COLUMN_ID)));
+
         return requestedWeather;
     }
 
     public static ContentValues getWeatherContentValue(RequestedWeather weather) {
         ContentValues cv = new ContentValues();
+
+        cv.put(DBConstants.COLUMN_ID, weather.getId());
 
         Long time = weather.getTime();
         if (time == null || time == 0) {

@@ -16,6 +16,11 @@ public class DBAdapter extends AbstractRecyclerViewAdapter<RequestedWeather, Cur
     }
 
     @Override
+    public void setItems(Cursor items) {
+        super.setItems(items);
+    }
+
+    @Override
     public RequestedWeather getItem(Cursor items, int i) {
         items.moveToPosition(i);
         return Utils.parseCursor(items);
@@ -23,9 +28,9 @@ public class DBAdapter extends AbstractRecyclerViewAdapter<RequestedWeather, Cur
 
     @Override
     public int getItemsSize(Cursor items) {
-        if(items.isClosed()){
+        if (items.isClosed() && items.getCount() < 0) {
             return 0;
-        }else {
+        } else {
             return items.getCount();
         }
     }

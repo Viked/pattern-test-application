@@ -29,6 +29,7 @@ public abstract class AbstractViewHolder<T> extends RecyclerView.ViewHolder {
         super(itemView);
         textView = (TextView) itemView.findViewById(R.id.text);
         imageView = (ImageView) itemView.findViewById(R.id.image);
+        bindView();
     }
 
     public void bindData(T data) {

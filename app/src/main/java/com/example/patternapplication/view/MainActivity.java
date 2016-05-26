@@ -18,7 +18,6 @@ import android.support.v7.widget.Toolbar;
 import com.example.patternapplication.R;
 import com.example.patternapplication.WeatherApplication;
 import com.example.patternapplication.model.db.DBLoader;
-import com.example.patternapplication.model.observable.MarkerDecorator;
 import com.example.patternapplication.presenter.IPresenter;
 import com.example.patternapplication.view.adapters.MyPagerAdapter;
 import com.google.android.gms.common.ConnectionResult;
@@ -59,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        if(savedInstanceState==null) {
+        if (savedInstanceState == null) {
             apiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
@@ -74,14 +73,14 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
         super.onResume();
         presenter = ((WeatherApplication) getApplication()).getPresenter();
         presenter.setActivity(this);
-        if(apiClient != null){
+        if (apiClient != null) {
             apiClient.connect();
         }
     }
 
     @Override
     protected void onDestroy() {
-        if(apiClient != null){
+        if (apiClient != null) {
             apiClient.disconnect();
         }
         super.onDestroy();
@@ -89,7 +88,9 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
 
     @Override
     public void reloadDB(Bundle args) {
-        getSupportLoaderManager().restartLoader(MY_DB_ID, args, this);
+        if (getSupportLoaderManager().getLoader(MY_DB_ID) != null) {
+            getSupportLoaderManager().restartLoader(MY_DB_ID, args, this);
+        }
     }
 
     @Override
@@ -133,5 +134,8 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
         return new DBLoader(this, args, presenter.getWeatherDB());
     }
 
-
+    @Override
+    public void showFragment(int i) {
+        mViewPager.setCurrentItem(i, true);
+    }
 }

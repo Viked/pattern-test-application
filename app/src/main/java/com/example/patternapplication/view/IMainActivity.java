@@ -14,4 +14,6 @@ public interface IMainActivity {
 
     void reloadDB(Bundle args);
 
+    void showFragment(int i);
+
 }

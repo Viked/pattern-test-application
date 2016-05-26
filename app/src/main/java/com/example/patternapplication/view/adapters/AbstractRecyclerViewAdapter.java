@@ -44,6 +44,10 @@ public abstract class AbstractRecyclerViewAdapter<T, C> extends RecyclerView.Ada
         notifyDataSetChanged();
     }
 
+    public C getItems() {
+        return items;
+    }
+
     @Override
     public int getItemCount() {
         if (items != null) {

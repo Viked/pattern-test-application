@@ -12,6 +12,8 @@ import com.example.patternapplication.R;
 import com.example.patternapplication.model.observable.MarkerDecorator;
 import com.example.patternapplication.view.adapters.PopupAdapter;
 import com.example.patternapplication.view.fragments.BaseFragment;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -99,6 +101,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
                     Marker marker = map.addMarker(decorator.getMarkerOptions());
                     if(decorator.getLocation().equals(getPresenter().getActiveMarker().getLocation())){
                         marker.showInfoWindow();
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(decorator.getLocation(), 5);
+                        map.animateCamera(cameraUpdate);
                     }
                 }
             }

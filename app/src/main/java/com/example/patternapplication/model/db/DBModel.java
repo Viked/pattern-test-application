@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.patternapplication.model.data.RequestedWeather;
 import com.google.android.gms.maps.model.LatLng;
@@ -76,7 +77,7 @@ public class DBModel implements IDBModel {
     @Override
     public void addRec(RequestedWeather weather) {
         if (weather != null) {
-            mDB.insert(DBConstants.DB_TABLE, null, Utils.getWeatherContentValue(weather));
+            weather.setId(mDB.insert(DBConstants.DB_TABLE, null, Utils.getWeatherContentValue(weather)));
         }
     }
 
@@ -90,7 +91,7 @@ public class DBModel implements IDBModel {
     @Override
     public void deleteRec(RequestedWeather weather) {
         if (weather != null) {
-            mDB.delete(DBConstants.DB_TABLE, DBConstants.COLUMN_ID + " = " + weather.getId(), null);
+            mDB.delete(DBConstants.DB_TABLE, DBConstants.COLUMN_ID + "=?", new String[]{"" + weather.getId()});
         }
     }
 

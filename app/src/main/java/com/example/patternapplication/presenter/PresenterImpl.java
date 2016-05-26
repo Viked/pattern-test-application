@@ -165,6 +165,7 @@ public class PresenterImpl implements IPresenter {
                     weather.setMapCoordinates(latLng);
                     temp.setWeather(weather);
                     dbModel.addRec(weather);
+
                     dataObservable.notifyObservers(weather);
                     requestUpdate();
                 }
@@ -197,10 +198,18 @@ public class PresenterImpl implements IPresenter {
             RequestedWeather weather = (RequestedWeather) marker;
             addLocation(weather.getMapCoordinates());
         }
+        activity.showFragment(0);
     }
 
     @Override
     public MarkerDecorator getActiveMarker() {
-        return activeMarker;
+        if (activeMarker != null) {
+            return activeMarker;
+        } else if (!markers.isEmpty()) {
+            return markers.get(markers.size() - 1);
+        } else {
+            return null;
+        }
+
     }
 }
