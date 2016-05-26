@@ -51,12 +51,15 @@ public abstract class AbstractViewHolder<T> extends RecyclerView.ViewHolder {
         deleteButtonLayout.setVisibility(View.VISIBLE);
         viewButtonLayout = (RelativeLayout) itemView.findViewById(R.id.content_view_button);
         viewButtonLayout.setVisibility(View.VISIBLE);
-        bindView();
+        viewButtonLayout.setX(1000);
+        deleteButtonLayout.setX(-1000);
     }
 
     public void bindData(T data) {
         itemView.setTag(data);
     }
 
-    public abstract void bindView();
+    public abstract View.OnClickListener deleteButtonOnClick();
+
+    public abstract View.OnClickListener viewButtonOnClick();
 }

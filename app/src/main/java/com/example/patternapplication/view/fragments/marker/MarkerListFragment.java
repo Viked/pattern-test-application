@@ -4,7 +4,6 @@ import android.view.View;
 
 import com.example.patternapplication.R;
 import com.example.patternapplication.model.data.RequestedWeather;
-import com.example.patternapplication.model.data.Utils;
 import com.example.patternapplication.model.observable.MarkerDecorator;
 import com.example.patternapplication.view.adapters.AbstractViewHolder;
 import com.example.patternapplication.view.fragments.BaseListFragment;
@@ -36,21 +35,24 @@ public class MarkerListFragment extends BaseListFragment<MarkerAdapter> {
         public void bindData(MarkerDecorator data) {
             super.bindData(data);
             RequestedWeather weather = data.getWeather();
-            String text = weather.getSys().getCountry() + " "
-                    + data.getLocation().toString();
-            getTextView().setText(text);
-            getImageView().setImageResource(R.drawable.weather_cloudy);
+            if (weather != null) {
+                String text = weather.getSys().getCountry() + " "
+                        + data.getLocation().toString();
+                getTextView().setText(text);
+                getImageView().setImageResource(R.drawable.weather_cloudy);
+            }
         }
 
         @Override
-        public void bindView() {
-            getDeleteButton().setOnClickListener(v -> {
-                getPresenter().getWeatherDB().deleteRec((RequestedWeather) itemView.getTag());
-                getAdapter().notifyDataSetChanged();
+        public View.OnClickListener deleteButtonOnClick() {
+            return (v -> {
+                getPresenter().deleteMarker((MarkerDecorator) itemView.getTag());
             });
-            getViewButton().setOnClickListener(v->{
+        }
 
-            });
+        @Override
+        public View.OnClickListener viewButtonOnClick() {
+            return null;
         }
     }
 }

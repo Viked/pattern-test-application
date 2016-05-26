@@ -1,12 +1,9 @@
 package com.example.patternapplication.presenter;
 
-import android.database.Cursor;
-
 import com.example.patternapplication.model.db.IDBModel;
 import com.example.patternapplication.model.observable.MarkerDecorator;
 import com.example.patternapplication.view.IMainActivity;
 import com.example.patternapplication.view.fragments.BaseFragment;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
@@ -28,7 +25,9 @@ public interface IPresenter {
 
     IDBModel getWeatherDB();
 
-    void update(Object data);
+    void requestUpdate();
+
+    void update();
 
     void setMode(String string);
 
@@ -36,4 +35,5 @@ public interface IPresenter {
 
     List<MarkerDecorator> getMarkerList();
 
+    void deleteMarker(MarkerDecorator marker);
 }

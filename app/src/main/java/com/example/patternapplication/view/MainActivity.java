@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        presenter.update(data);
+        presenter.update();
     }
 
     @Override

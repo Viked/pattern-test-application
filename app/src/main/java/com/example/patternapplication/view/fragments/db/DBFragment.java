@@ -2,8 +2,6 @@ package com.example.patternapplication.view.fragments.db;
 
 import android.database.Cursor;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.example.patternapplication.R;
 import com.example.patternapplication.model.data.RequestedWeather;
@@ -25,12 +23,13 @@ public class DBFragment extends BaseListFragment<DBAdapter> {
 
     @Override
     public void update(Observable observable, Object data) {
-        if(data != null && data instanceof Cursor) {
-            getAdapter().setItems((Cursor) data);
+        Cursor cursor = getPresenter().getWeatherDB().getDBCursor();
+        if(cursor!=null) {
+            getAdapter().setItems(cursor);
         }
     }
 
-    public class DBViewHolder extends AbstractViewHolder<RequestedWeather> {
+    private class DBViewHolder extends AbstractViewHolder<RequestedWeather> {
 
 
         public DBViewHolder(View itemView) {
@@ -48,14 +47,16 @@ public class DBFragment extends BaseListFragment<DBAdapter> {
         }
 
         @Override
-        public void bindView() {
-            getDeleteButton().setOnClickListener(v -> {
+        public View.OnClickListener deleteButtonOnClick() {
+            return (v -> {
                 getPresenter().getWeatherDB().deleteRec((RequestedWeather) itemView.getTag());
-                getAdapter().notifyDataSetChanged();
+                getPresenter().requestUpdate();
             });
-            getViewButton().setOnClickListener(v->{
+        }
 
-            });
+        @Override
+        public View.OnClickListener viewButtonOnClick() {
+            return null;
         }
     }
 

@@ -66,7 +66,7 @@ public abstract class AbstractRecyclerViewAdapter<T, C> extends RecyclerView.Ada
     private class ItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
 
         public ItemTouchHelperCallback() {
-            super(0, ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT);
+            super(0, ItemTouchHelper.RIGHT);
         }
 
         @Override
@@ -77,8 +77,10 @@ public abstract class AbstractRecyclerViewAdapter<T, C> extends RecyclerView.Ada
 
         @Override
         public void onSwiped(final RecyclerView.ViewHolder viewHolder, int swipeDir) {
-
-            viewHolder.itemView.setOnClickListener(v -> notifyItemChanged(viewHolder.getAdapterPosition()));
+            AbstractViewHolder<T> holder = (AbstractViewHolder<T>) viewHolder;
+            if (swipeDir == ItemTouchHelper.RIGHT) {
+                holder.getDeleteButton().setOnClickListener(holder.deleteButtonOnClick());
+            }
         }
 
         @Override

@@ -7,12 +7,13 @@
         android:id="@+id/swipable_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_centerVertical="true">
 
         <ImageView
             android:id="@+id/image"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:layout_margin="16dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true" />
 
@@ -38,8 +39,9 @@
             android:id="@+id/delete_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_margin="16dp"
-            android:src="@drawable/delete" />
+            android:padding="16dp"
+            android:src="@drawable/delete"
+            android:background="?android:attr/selectableItemBackground"/>
     </RelativeLayout>
 
 
@@ -55,8 +57,10 @@
             android:id="@+id/view_button"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_margin="16dp"
-            android:src="@drawable/eye" />
+            android:padding="16dp"
+            android:src="@drawable/eye"
+            android:background="?android:attr/selectableItemBackground"
+            />
     </RelativeLayout>
 </RelativeLayout>
 

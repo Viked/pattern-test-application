@@ -107,7 +107,6 @@ public class DBModel implements IDBModel {
                     return weather;
                 }
             } while (cursor.moveToNext());
-
         }
         return null;
     }

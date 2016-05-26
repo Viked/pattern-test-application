@@ -93,11 +93,13 @@ public class PresenterImpl implements IPresenter {
     }
 
     @Override
-    public void update(Object data) {
-        fragmentObservable.notifyObservers(data);
-        if (data == null) {
-            activity.reloadDB(null);
-        }
+    public void requestUpdate() {
+        activity.reloadDB(null);
+    }
+
+    @Override
+    public void update() {
+        fragmentObservable.notifyObservers(null);
     }
 
     @Override
@@ -132,7 +134,7 @@ public class PresenterImpl implements IPresenter {
             if (time < UPDATE_TIME_THRESHOLD) {
                 temp.setWeather(weather);
                 dataObservable.notifyObservers(weather);
-                update(null);
+                requestUpdate();
             } else {
                 Call<RequestedWeather> weatherCall = apiRequestInterface.getWeather(latLng.latitude, latLng.longitude);
                 weatherCall.enqueue(new Callback<RequestedWeather>() {
@@ -142,7 +144,7 @@ public class PresenterImpl implements IPresenter {
                         temp.setWeather(weather);
                         dbModel.editRec(weather);
                         dataObservable.notifyObservers(weather);
-                        update(null);
+                        requestUpdate();
                     }
 
                     @Override
@@ -161,7 +163,7 @@ public class PresenterImpl implements IPresenter {
                     temp.setWeather(weather);
                     dbModel.addRec(weather);
                     dataObservable.notifyObservers(weather);
-                    update(null);
+                    requestUpdate();
                 }
 
                 @Override
@@ -177,4 +179,9 @@ public class PresenterImpl implements IPresenter {
         return markers;
     }
 
+    @Override
+    public void deleteMarker(MarkerDecorator marker) {
+        markers.remove(marker);
+        update();
+    }
 }

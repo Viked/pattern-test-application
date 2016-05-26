@@ -12,6 +12,4 @@ public interface IMainActivity {
 
     void reloadDB(Bundle args);
 
-    LayoutInflater getLayoutInflater();
-
 }

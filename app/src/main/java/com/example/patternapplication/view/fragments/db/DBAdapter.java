@@ -23,7 +23,11 @@ public class DBAdapter extends AbstractRecyclerViewAdapter<RequestedWeather, Cur
 
     @Override
     public int getItemsSize(Cursor items) {
-        return items.getCount();
+        if(items.isClosed()){
+            return 0;
+        }else {
+            return items.getCount();
+        }
     }
 
 }
