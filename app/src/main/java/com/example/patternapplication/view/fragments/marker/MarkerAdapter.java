@@ -1,6 +1,6 @@
 package com.example.patternapplication.view.fragments.marker;
 
-import com.example.patternapplication.model.observable.MarkerDecorator;
+import com.example.patternapplication.model.marker.MarkerDecorator;
 import com.example.patternapplication.view.adapters.AbstractRecyclerViewAdapter;
 
 import java.util.List;

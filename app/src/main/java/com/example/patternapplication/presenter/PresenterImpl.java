@@ -7,10 +7,10 @@ import com.example.patternapplication.model.WeatherModel;
 import com.example.patternapplication.model.data.RequestedWeather;
 import com.example.patternapplication.model.db.DBModel;
 import com.example.patternapplication.model.db.IDBModel;
-import com.example.patternapplication.model.observable.BaseDecorator;
-import com.example.patternapplication.model.observable.BaseMarker;
-import com.example.patternapplication.model.observable.MarkerDecorator;
-import com.example.patternapplication.model.observable.TemperatureDecorator;
+import com.example.patternapplication.model.marker.BaseDecorator;
+import com.example.patternapplication.model.marker.BaseMarker;
+import com.example.patternapplication.model.marker.MarkerDecorator;
+import com.example.patternapplication.model.marker.TemperatureDecorator;
 import com.example.patternapplication.view.IMainActivity;
 import com.example.patternapplication.view.fragments.BaseFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -165,7 +165,6 @@ public class PresenterImpl implements IPresenter {
                     weather.setMapCoordinates(latLng);
                     temp.setWeather(weather);
                     dbModel.addRec(weather);
-
                     dataObservable.notifyObservers(weather);
                     requestUpdate();
                 }
@@ -186,6 +185,7 @@ public class PresenterImpl implements IPresenter {
     @Override
     public void deleteMarker(MarkerDecorator marker) {
         markers.remove(marker);
+        dataObservable.deleteObserver((BaseDecorator) marker);
         update();
     }
 
@@ -210,6 +210,5 @@ public class PresenterImpl implements IPresenter {
         } else {
             return null;
         }
-
     }
 }

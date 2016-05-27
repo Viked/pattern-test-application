@@ -4,7 +4,7 @@ import android.view.View;
 
 import com.example.patternapplication.R;
 import com.example.patternapplication.model.data.RequestedWeather;
-import com.example.patternapplication.model.observable.MarkerDecorator;
+import com.example.patternapplication.model.marker.MarkerDecorator;
 import com.example.patternapplication.view.adapters.AbstractViewHolder;
 import com.example.patternapplication.view.fragments.BaseListFragment;
 

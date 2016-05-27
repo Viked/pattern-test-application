@@ -14,12 +14,15 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.example.patternapplication.R;
 import com.example.patternapplication.WeatherApplication;
 import com.example.patternapplication.model.db.DBLoader;
 import com.example.patternapplication.presenter.IPresenter;
 import com.example.patternapplication.view.adapters.MyPagerAdapter;
+import com.example.patternapplication.view.dialogs.MarkerSettingsDialog;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -28,6 +31,8 @@ import com.google.android.gms.maps.model.LatLng;
 public class MainActivity extends AppCompatActivity implements IMainActivity, LoaderManager.LoaderCallbacks<Cursor>, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int MY_DB_ID = 0;
+
+    private static final int MENU_SETTINGS_ID = 0;
 
     //open weather api key d45545a62ad42fe8a840303b8600c6d8
     private IPresenter presenter;
@@ -66,6 +71,31 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
                     .build();
         }
 
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuItem settings = menu.add(Menu.NONE, MENU_SETTINGS_ID, Menu.NONE, R.string.menu_item_settings);
+        settings.setIcon(R.drawable.ic_settings);
+        settings.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case MENU_SETTINGS_ID:
+                new MarkerSettingsDialog().show(getSupportFragmentManager(),
+                        MarkerSettingsDialog.class.getName());
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
     @Override

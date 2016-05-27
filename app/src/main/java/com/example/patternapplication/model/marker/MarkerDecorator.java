@@ -1,4 +1,4 @@
-package com.example.patternapplication.model.observable;
+package com.example.patternapplication.model.marker;
 
 
 import com.example.patternapplication.model.data.RequestedWeather;

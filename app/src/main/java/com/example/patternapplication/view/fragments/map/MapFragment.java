@@ -9,7 +9,7 @@ import android.widget.CompoundButton;
 import android.widget.RadioButton;
 
 import com.example.patternapplication.R;
-import com.example.patternapplication.model.observable.MarkerDecorator;
+import com.example.patternapplication.model.marker.MarkerDecorator;
 import com.example.patternapplication.view.adapters.PopupAdapter;
 import com.example.patternapplication.view.fragments.BaseFragment;
 import com.google.android.gms.maps.CameraUpdate;
@@ -17,10 +17,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
-import java.util.List;
 import java.util.Observable;
 
 /**

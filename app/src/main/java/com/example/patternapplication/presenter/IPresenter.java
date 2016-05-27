@@ -1,7 +1,7 @@
 package com.example.patternapplication.presenter;
 
 import com.example.patternapplication.model.db.IDBModel;
-import com.example.patternapplication.model.observable.MarkerDecorator;
+import com.example.patternapplication.model.marker.MarkerDecorator;
 import com.example.patternapplication.view.IMainActivity;
 import com.example.patternapplication.view.fragments.BaseFragment;
 import com.google.android.gms.maps.model.LatLng;

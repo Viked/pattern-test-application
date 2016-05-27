@@ -7,4 +7,10 @@
     <string name="fragment_title_map">Map</string>
     <string name="fragment_title_marker_list">Current markers</string>
     <string name="fragment_title_db">Recent markers</string>
+    <string name="menu_item_settings">Settings</string>
+    <string name="dialog_marker_settings_title">Marker settings</string>
+    <string name="decorator_title_current_temperature">Current temperature</string>
+    <string name="decorator_title_country_code">Country code</string>
+    <string name="decorator_title_location_name">Location name</string>
+    <string name="decorator_title_country_name">Country name</string>
 </resources>
