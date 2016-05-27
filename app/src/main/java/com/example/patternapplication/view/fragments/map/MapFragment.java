@@ -5,11 +5,9 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.RadioButton;
 
 import com.example.patternapplication.R;
-import com.example.patternapplication.model.marker.MarkerDecorator;
+import com.example.patternapplication.model.marker.WeatherMarker;
 import com.example.patternapplication.view.adapters.PopupAdapter;
 import com.example.patternapplication.view.fragments.BaseFragment;
 import com.google.android.gms.maps.CameraUpdate;
@@ -19,6 +17,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.Marker;
 
+import java.util.List;
 import java.util.Observable;
 
 /**
@@ -28,13 +27,6 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     private MapView mapView;
     private GoogleMap map;
-
-    private final CompoundButton.OnCheckedChangeListener modeListener =
-            (buttonView, isChecked) -> {
-                if (isChecked) {
-                    getPresenter().setMode((String) buttonView.getTag());
-                }
-            };
 
     @Nullable
     @Override
@@ -48,13 +40,6 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
         mapView = (MapView) view.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-
-        RadioButton simple = (RadioButton) view.findViewById(R.id.simple);
-        RadioButton withTwoTemperatures = (RadioButton) view.findViewById(R.id.with_two_temperatures);
-        RadioButton bonus = (RadioButton) view.findViewById(R.id.bonus);
-        simple.setOnCheckedChangeListener(modeListener);
-        withTwoTemperatures.setOnCheckedChangeListener(modeListener);
-        bonus.setOnCheckedChangeListener(modeListener);
     }
 
     @Override
@@ -92,12 +77,13 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     @Override
     public void update(Observable observable, Object data) {
-        if(map!=null){
+        if (map != null) {
             map.clear();
-            if(getPresenter().getMarkerList().size()>0) {
-                for (MarkerDecorator decorator : getPresenter().getMarkerList()) {
+            List<WeatherMarker> weatherMarkers = getPresenter().getMarkerList();
+            if (weatherMarkers.size() > 0) {
+                for (WeatherMarker decorator : weatherMarkers) {
                     Marker marker = map.addMarker(decorator.getMarkerOptions());
-                    if(decorator.getLocation().equals(getPresenter().getActiveMarker().getLocation())){
+                    if (decorator.getLocation().equals(getPresenter().getActiveMarker().getLocation())) {
                         marker.showInfoWindow();
                         CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(decorator.getLocation(), 5);
                         map.animateCamera(cameraUpdate);

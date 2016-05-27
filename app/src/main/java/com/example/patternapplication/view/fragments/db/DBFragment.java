@@ -24,7 +24,7 @@ public class DBFragment extends BaseListFragment<DBAdapter> {
     @Override
     public void update(Observable observable, Object data) {
         Cursor cursor = getPresenter().getWeatherDB().getDBCursor();
-        if (cursor != null) {
+        if (getAdapter()!= null && cursor != null) {
             getAdapter().setItems(cursor);
         }
     }

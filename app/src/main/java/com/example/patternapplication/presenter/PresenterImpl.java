@@ -7,17 +7,26 @@ import com.example.patternapplication.model.WeatherModel;
 import com.example.patternapplication.model.data.RequestedWeather;
 import com.example.patternapplication.model.db.DBModel;
 import com.example.patternapplication.model.db.IDBModel;
-import com.example.patternapplication.model.marker.BaseDecorator;
-import com.example.patternapplication.model.marker.BaseMarker;
-import com.example.patternapplication.model.marker.MarkerDecorator;
-import com.example.patternapplication.model.marker.TemperatureDecorator;
+import com.example.patternapplication.model.marker.DecoratorConstants;
+import com.example.patternapplication.model.marker.DecoratorItemSettings;
+import com.example.patternapplication.model.marker.DecoratorSettings;
+import com.example.patternapplication.model.marker.WeatherMarker;
+import com.example.patternapplication.model.marker.decorator.BaseDecorator;
+import com.example.patternapplication.model.marker.decorator.CountryCodeDecorator;
+import com.example.patternapplication.model.marker.decorator.CountryNameDecorator;
+import com.example.patternapplication.model.marker.decorator.DecoratorMock;
+import com.example.patternapplication.model.marker.decorator.LocationNameDecorator;
+import com.example.patternapplication.model.marker.decorator.TemperatureDecorator;
+import com.example.patternapplication.model.marker.decorator.TextDecorator;
 import com.example.patternapplication.view.IMainActivity;
 import com.example.patternapplication.view.fragments.BaseFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 
 import retrofit2.Call;
@@ -54,15 +63,18 @@ public class PresenterImpl implements IPresenter {
 
     private Observable fragmentObservable = getObservable();
 
-    private List<MarkerDecorator> markers = new ArrayList<>();
+    private Map<LatLng, WeatherMarker> markerMap = new HashMap<>();
 
-    private MarkerDecorator activeMarker = null;
+    private LatLng activeMarkerKey = new LatLng(0, 0);
 
-    private int mode = 0;
+    private List<DecoratorItemSettings> settings;
+
+    private boolean markerDecoratorActuality = false;
 
     public PresenterImpl(Application context) {
         this.context = context;
         dbModel = new DBModel(context);
+        settings = DecoratorSettings.getSettings(context);
     }
 
     @Override
@@ -97,6 +109,13 @@ public class PresenterImpl implements IPresenter {
     @Override
     public void requestUpdate() {
         activity.reloadDB(null);
+        List<DecoratorItemSettings> settings = DecoratorSettings.getSettings(context);
+        if (this.settings != null && this.settings.equals(settings)) {
+            markerDecoratorActuality = true;
+            return;
+        }
+        this.settings = settings;
+        markerDecoratorActuality = false;
     }
 
     @Override
@@ -109,33 +128,17 @@ public class PresenterImpl implements IPresenter {
         dbModel.close();
     }
 
-    public MarkerDecorator initial(LatLng latLng) {
-        MarkerDecorator decorator = new BaseDecorator(new BaseMarker(latLng));
-        switch (mode) {
-            case 2:
-                //decorator =
-            case 1:
-                decorator = new TemperatureDecorator(decorator);
-        }
-        dataObservable.addObserver((BaseDecorator) decorator);
-        markers.add(decorator);
-        activeMarker = decorator;
-        return decorator;
-    }
-
-    @Override
-    public void setMode(String string) {
-        mode = Integer.parseInt(string);
-    }
-
     @Override
     public void addLocation(LatLng latLng) {
-        MarkerDecorator temp = initial(latLng);
+        WeatherMarker marker = new WeatherMarker(latLng);
+        dataObservable.addObserver(marker);
+        activeMarkerKey = latLng;
+        markerMap.put(latLng, marker);
+        decorateMarker(marker);
         RequestedWeather weather = dbModel.getWeatherByCoordinates(latLng, COORDINATE_ERROR);
         if (weather != null) {
             long time = Calendar.getInstance().getTimeInMillis() - weather.getTime();
             if (time < UPDATE_TIME_THRESHOLD) {
-                temp.setWeather(weather);
                 dataObservable.notifyObservers(weather);
                 requestUpdate();
             } else {
@@ -144,7 +147,6 @@ public class PresenterImpl implements IPresenter {
                     @Override
                     public void onResponse(Call<RequestedWeather> call, Response<RequestedWeather> response) {
                         RequestedWeather weather = response.body();
-                        temp.setWeather(weather);
                         dbModel.editRec(weather);
                         dataObservable.notifyObservers(weather);
                         requestUpdate();
@@ -163,7 +165,6 @@ public class PresenterImpl implements IPresenter {
                 public void onResponse(Call<RequestedWeather> call, Response<RequestedWeather> response) {
                     RequestedWeather weather = response.body();
                     weather.setMapCoordinates(latLng);
-                    temp.setWeather(weather);
                     dbModel.addRec(weather);
                     dataObservable.notifyObservers(weather);
                     requestUpdate();
@@ -178,21 +179,24 @@ public class PresenterImpl implements IPresenter {
     }
 
     @Override
-    public List<MarkerDecorator> getMarkerList() {
-        return markers;
+    public List<WeatherMarker> getMarkerList() {
+        if (!markerDecoratorActuality) {
+            decorateMarkers();
+        }
+        return new ArrayList<>(markerMap.values());
     }
 
     @Override
-    public void deleteMarker(MarkerDecorator marker) {
-        markers.remove(marker);
-        dataObservable.deleteObserver((BaseDecorator) marker);
+    public void deleteMarker(WeatherMarker marker) {
+        markerMap.remove(marker.getLocation());
+        dataObservable.deleteObserver(marker);
         update();
     }
 
     @Override
     public void showMarker(Object marker) {
-        if (marker instanceof MarkerDecorator) {
-            activeMarker = (MarkerDecorator) marker;
+        if (marker instanceof WeatherMarker) {
+            activeMarkerKey = ((WeatherMarker) marker).getLocation();
             update();
         } else if (marker instanceof RequestedWeather) {
             RequestedWeather weather = (RequestedWeather) marker;
@@ -201,14 +205,41 @@ public class PresenterImpl implements IPresenter {
         activity.showFragment(0);
     }
 
+
     @Override
-    public MarkerDecorator getActiveMarker() {
-        if (activeMarker != null) {
-            return activeMarker;
-        } else if (!markers.isEmpty()) {
-            return markers.get(markers.size() - 1);
-        } else {
-            return null;
+    public WeatherMarker getActiveMarker() {
+        return markerMap.get(activeMarkerKey);
+    }
+
+    private void decorateMarkers() {
+        for (WeatherMarker weatherMarker : markerMap.values()) {
+            decorateMarker(weatherMarker);
+        }
+        markerDecoratorActuality = true;
+    }
+
+    private void decorateMarker(WeatherMarker marker) {
+        marker.setTextDecorator(new BaseDecorator(new DecoratorMock()));
+        for (int i = settings.size() - 1; i > -1; i--) {
+            if (settings.get(i).isChecked()) {
+                marker.setTextDecorator(decorateMarker(settings.get(i).getId(), marker.getTextDecorator()));
+            }
         }
     }
+
+    private TextDecorator decorateMarker(int decoratorId, TextDecorator markerDecorator) {
+        switch (decoratorId) {
+            case DecoratorConstants.TEMPERATURE_ID:
+                return new TemperatureDecorator(markerDecorator);
+            case DecoratorConstants.COUNTRY_CODE_ID:
+                return new CountryCodeDecorator(markerDecorator);
+            case DecoratorConstants.COUNTRY_NAME_ID:
+                return new CountryNameDecorator(markerDecorator);
+            case DecoratorConstants.LOCATION_NAME_ID:
+                return new LocationNameDecorator(markerDecorator);
+            default:
+                return markerDecorator;
+        }
+    }
+
 }

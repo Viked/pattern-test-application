@@ -1,7 +1,7 @@
 package com.example.patternapplication.presenter;
 
 import com.example.patternapplication.model.db.IDBModel;
-import com.example.patternapplication.model.marker.MarkerDecorator;
+import com.example.patternapplication.model.marker.WeatherMarker;
 import com.example.patternapplication.view.IMainActivity;
 import com.example.patternapplication.view.fragments.BaseFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -29,15 +29,13 @@ public interface IPresenter {
 
     void update();
 
-    void setMode(String string);
-
     void addLocation(LatLng latLng);
 
-    List<MarkerDecorator> getMarkerList();
+    List<WeatherMarker> getMarkerList();
 
-    void deleteMarker(MarkerDecorator marker);
+    void deleteMarker(WeatherMarker marker);
 
     void showMarker(Object marker);
 
-    MarkerDecorator getActiveMarker();
+    WeatherMarker getActiveMarker();
 }

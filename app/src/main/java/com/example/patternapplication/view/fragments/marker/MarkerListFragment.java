@@ -4,7 +4,7 @@ import android.view.View;
 
 import com.example.patternapplication.R;
 import com.example.patternapplication.model.data.RequestedWeather;
-import com.example.patternapplication.model.marker.MarkerDecorator;
+import com.example.patternapplication.model.marker.WeatherMarker;
 import com.example.patternapplication.view.adapters.AbstractViewHolder;
 import com.example.patternapplication.view.fragments.BaseListFragment;
 
@@ -25,14 +25,14 @@ public class MarkerListFragment extends BaseListFragment<MarkerAdapter> {
         getAdapter().setItems(getPresenter().getMarkerList());
     }
 
-    public class MarkerViewHolder extends AbstractViewHolder<MarkerDecorator> {
+    public class MarkerViewHolder extends AbstractViewHolder<WeatherMarker> {
 
         public MarkerViewHolder(View itemView) {
             super(itemView);
         }
 
         @Override
-        public void bindData(MarkerDecorator data) {
+        public void bindData(WeatherMarker data) {
             super.bindData(data);
             RequestedWeather weather = data.getWeather();
             if (weather != null) {
@@ -45,7 +45,7 @@ public class MarkerListFragment extends BaseListFragment<MarkerAdapter> {
 
         @Override
         public void deleteAction() {
-            getPresenter().deleteMarker((MarkerDecorator) itemView.getTag());
+            getPresenter().deleteMarker((WeatherMarker) itemView.getTag());
         }
 
         @Override

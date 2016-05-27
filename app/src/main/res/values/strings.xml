@@ -13,4 +13,5 @@
     <string name="decorator_title_country_code">Country code</string>
     <string name="decorator_title_location_name">Location name</string>
     <string name="decorator_title_country_name">Country name</string>
+    <string name="marker_title">Current weather</string>
 </resources>

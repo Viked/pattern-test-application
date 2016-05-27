@@ -1,43 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.gms.maps.MapView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/map"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/map"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    </com.google.android.gms.maps.MapView>
-
-    <RadioGroup
-        android:id="@+id/radio_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:gravity="top|left">
-
-        <RadioButton
-            android:id="@+id/simple"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:tag= "0"
-            android:text="@string/title_simple" />
-
-        <RadioButton
-            android:id="@+id/with_two_temperatures"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:tag= "1"
-            android:text="@string/title_with_two_temperatures" />
-
-        <RadioButton
-            android:id="@+id/bonus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:tag= "2"
-            android:text="@string/title_bonus" />
-    </RadioGroup>
-
-</RelativeLayout>
+</com.google.android.gms.maps.MapView>
