@@ -1,6 +1,12 @@
 package com.example.patternapplication.view.adapters;
 
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +16,7 @@ import android.widget.TextView;
 import com.example.patternapplication.R;
 import com.example.patternapplication.model.marker.DecoratorItemSettings;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -37,6 +44,37 @@ public class SettingsDialogRecyclerViewAdapter extends RecyclerView.Adapter<Sett
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback());
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+    }
+
+    private class ItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
+
+        public ItemTouchHelperCallback() {
+            super(ItemTouchHelper.UP|ItemTouchHelper.DOWN, 0);
+        }
+
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return true;
+        }
+
+        @Override
+        public void onMoved(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int fromPos, RecyclerView.ViewHolder target, int toPos, int x, int y) {
+            super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y);
+            Collections.swap(list, fromPos, toPos);
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
