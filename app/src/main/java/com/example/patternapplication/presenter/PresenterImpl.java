@@ -2,6 +2,7 @@ package com.example.patternapplication.presenter;
 
 import android.app.Application;
 
+import com.example.patternapplication.R;
 import com.example.patternapplication.model.WeatherApiRequestInterface;
 import com.example.patternapplication.model.WeatherModel;
 import com.example.patternapplication.model.data.RequestedWeather;
@@ -38,6 +39,7 @@ import retrofit2.Response;
  */
 public class PresenterImpl implements IPresenter {
 
+    private static final long NORMAL_COD = 200L;
     private static final long UPDATE_TIME_THRESHOLD = 3600000;
     private static final double COORDINATE_ERROR = 0.5;
 
@@ -133,7 +135,6 @@ public class PresenterImpl implements IPresenter {
     public void addLocation(LatLng latLng) {
         WeatherMarker marker = new WeatherMarker(latLng);
         dataObservable.addObserver(marker);
-        activeMarkerKey = latLng;
         markerMap.put(latLng, marker);
         decorateMarker(marker);
         RequestedWeather weather = dbModel.getWeatherByCoordinates(latLng, COORDINATE_ERROR);
@@ -148,8 +149,13 @@ public class PresenterImpl implements IPresenter {
                     @Override
                     public void onResponse(Call<RequestedWeather> call, Response<RequestedWeather> response) {
                         RequestedWeather weather = response.body();
-                        dbModel.editRec(weather);
-                        dataObservable.notifyObservers(weather);
+                        if(testRequestResult(weather)){
+                            dbModel.editRec(weather);
+                            dataObservable.notifyObservers(weather);
+                            activeMarkerKey = latLng;
+                        } else {
+                            activity.showMassage(R.string.massage_error_cod_not_equals_last_result);
+                        }
                         requestUpdate();
                     }
 
@@ -165,9 +171,16 @@ public class PresenterImpl implements IPresenter {
                 @Override
                 public void onResponse(Call<RequestedWeather> call, Response<RequestedWeather> response) {
                     RequestedWeather weather = response.body();
-                    weather.setMapCoordinates(latLng);
-                    dbModel.addRec(weather);
-                    dataObservable.notifyObservers(weather);
+                    if(testRequestResult(weather)){
+                        weather.setMapCoordinates(latLng);
+                        dbModel.addRec(weather);
+                        dataObservable.notifyObservers(weather);
+                        activeMarkerKey = latLng;
+                    } else {
+                        activity.showMassage(R.string.massage_error_cod_not_equals_try_again);
+                        dataObservable.deleteObserver(marker);
+                        markerMap.remove(latLng);
+                    }
                     requestUpdate();
                 }
 
@@ -242,5 +255,11 @@ public class PresenterImpl implements IPresenter {
                 return markerDecorator;
         }
     }
+
+    private boolean testRequestResult(RequestedWeather weather){
+        return weather.getCod().equals(NORMAL_COD);
+    }
+
+
 
 }

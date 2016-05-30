@@ -14,4 +14,6 @@
     <string name="decorator_title_location_name">Location name</string>
     <string name="decorator_title_country_name">Country name</string>
     <string name="marker_title">Current weather</string>
+    <string name="massage_error_cod_not_equals_try_again">Weather is not available, please try again later.</string>
+    <string name="massage_error_cod_not_equals_last_result">Weather is not available, shows outdated data.</string>
 </resources>
