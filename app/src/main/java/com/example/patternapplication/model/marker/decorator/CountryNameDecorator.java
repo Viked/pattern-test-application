@@ -15,7 +15,11 @@ public class CountryNameDecorator extends BaseDecorator {
 
     @Override
     public String getText(RequestedWeather weather, Context context) {
-        return weather.getSys().getCountry() + "\n" + super.getText(weather, context);
+        if(weather!=null){
+            return weather.getSys().getCountry() + "\n" + super.getText(weather, context);
+        } else {
+            return "";
+        }
     }
 
 }

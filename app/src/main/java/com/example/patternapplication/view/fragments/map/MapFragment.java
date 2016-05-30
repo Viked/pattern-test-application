@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.patternapplication.R;
@@ -15,6 +16,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -129,6 +132,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
             if (popup == null) {
                 popup = inflater.inflate(R.layout.popup, null);
             }
+            ImageView imageView = (ImageView) popup.findViewById(R.id.image);
+            imageView.setImageResource(R.drawable.weather_cloudy);
             TextView tv = (TextView) popup.findViewById(R.id.title);
             tv.setText(R.string.marker_title);
             if (chosenMarker != null) {

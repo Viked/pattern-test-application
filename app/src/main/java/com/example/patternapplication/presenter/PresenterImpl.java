@@ -38,7 +38,7 @@ import retrofit2.Response;
  */
 public class PresenterImpl implements IPresenter {
 
-    private static final long UPDATE_TIME_THRESHOLD = 600000;
+    private static final long UPDATE_TIME_THRESHOLD = 3600000;
     private static final double COORDINATE_ERROR = 0.5;
 
 
@@ -109,17 +109,18 @@ public class PresenterImpl implements IPresenter {
     @Override
     public void requestUpdate() {
         activity.reloadDB(null);
-        List<DecoratorItemSettings> settings = DecoratorSettings.getSettings(context);
-        if (this.settings != null && this.settings.equals(settings)) {
-            markerDecoratorActuality = true;
-            return;
-        }
-        this.settings = settings;
-        markerDecoratorActuality = false;
+
     }
 
     @Override
     public void update() {
+        List<DecoratorItemSettings> settings = DecoratorSettings.getSettings(context);
+        if (this.settings != null && this.settings.equals(settings)) {
+            markerDecoratorActuality = true;
+        } else {
+            this.settings = settings;
+            markerDecoratorActuality = false;
+        }
         fragmentObservable.notifyObservers(null);
     }
 
