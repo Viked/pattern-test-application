@@ -7,6 +7,7 @@ import com.example.patternapplication.model.marker.decorator.DecoratorMock;
 import com.example.patternapplication.model.marker.decorator.TextDecorator;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterItem;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -14,7 +15,7 @@ import java.util.Observer;
 /**
  * Created by 1 on 15.05.2016.
  */
-public class WeatherMarker implements Observer {
+public class WeatherMarker implements Observer, ClusterItem {
 
     private MarkerOptions markerOptions;
 
@@ -48,7 +49,8 @@ public class WeatherMarker implements Observer {
         this.weather = weather;
     }
 
-    public LatLng getLocation() {
+    @Override
+    public LatLng getPosition() {
         return markerOptions.getPosition();
     }
 
@@ -63,4 +65,5 @@ public class WeatherMarker implements Observer {
     public RequestedWeather getWeather() {
         return weather;
     }
+
 }

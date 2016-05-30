@@ -37,7 +37,7 @@ public class MarkerListFragment extends BaseListFragment<MarkerAdapter> {
             RequestedWeather weather = data.getWeather();
             if (weather != null) {
                 String text = weather.getSys().getCountry() + " "
-                        + data.getLocation().toString();
+                        + data.getPosition().toString();
                 getTextView().setText(text);
                 getImageView().setImageResource(R.drawable.weather_cloudy);
             }

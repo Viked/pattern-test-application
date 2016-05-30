@@ -1,10 +1,5 @@
 package com.example.patternapplication.view.adapters;
 
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
@@ -56,7 +51,7 @@ public class SettingsDialogRecyclerViewAdapter extends RecyclerView.Adapter<Sett
     private class ItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {
 
         public ItemTouchHelperCallback() {
-            super(ItemTouchHelper.UP|ItemTouchHelper.DOWN, 0);
+            super(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0);
         }
 
         @Override

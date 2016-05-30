@@ -188,7 +188,7 @@ public class PresenterImpl implements IPresenter {
 
     @Override
     public void deleteMarker(WeatherMarker marker) {
-        markerMap.remove(marker.getLocation());
+        markerMap.remove(marker.getPosition());
         dataObservable.deleteObserver(marker);
         update();
     }
@@ -196,7 +196,7 @@ public class PresenterImpl implements IPresenter {
     @Override
     public void showMarker(Object marker) {
         if (marker instanceof WeatherMarker) {
-            activeMarkerKey = ((WeatherMarker) marker).getLocation();
+            activeMarkerKey = ((WeatherMarker) marker).getPosition();
             update();
         } else if (marker instanceof RequestedWeather) {
             RequestedWeather weather = (RequestedWeather) marker;

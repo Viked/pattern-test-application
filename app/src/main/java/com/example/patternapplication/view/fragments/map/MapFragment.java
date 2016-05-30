@@ -1,21 +1,25 @@
 package com.example.patternapplication.view.fragments.map;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.patternapplication.R;
 import com.example.patternapplication.model.marker.WeatherMarker;
-import com.example.patternapplication.view.adapters.PopupAdapter;
 import com.example.patternapplication.view.fragments.BaseFragment;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.util.List;
 import java.util.Observable;
@@ -27,6 +31,10 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     private MapView mapView;
     private GoogleMap map;
+    private ClusterManager<WeatherMarker> mClusterManager;
+    private WeatherMarker chosenMarker;
+    private LatLng activeMarkerPosition = null;
+
 
     @Nullable
     @Override
@@ -71,25 +79,89 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         googleMap.setOnMapClickListener(getPresenter()::addLocation);
-        googleMap.setInfoWindowAdapter(new PopupAdapter(getActivity().getLayoutInflater()));
         getPresenter().requestUpdate();
+        mClusterManager = new ClusterManager<>(getContext(), googleMap);
+        mClusterManager.getMarkerCollection().setOnInfoWindowAdapter(new PopupAdapter(getActivity().getLayoutInflater()));
+        googleMap.setOnCameraChangeListener(mClusterManager);
+        googleMap.setOnMarkerClickListener(mClusterManager);
+        map.setInfoWindowAdapter(mClusterManager.getMarkerManager());
+        mClusterManager.setOnClusterItemClickListener(marker -> {
+            chosenMarker = marker;
+            return false;
+        });
+        mClusterManager.setRenderer(new MyClusterRenderer(getContext(), map, mClusterManager));
+
     }
 
     @Override
     public void update(Observable observable, Object data) {
         if (map != null) {
-            map.clear();
+            mClusterManager.clearItems();
             List<WeatherMarker> weatherMarkers = getPresenter().getMarkerList();
             if (weatherMarkers.size() > 0) {
-                for (WeatherMarker decorator : weatherMarkers) {
-                    Marker marker = map.addMarker(decorator.getMarkerOptions());
-                    if (decorator.getLocation().equals(getPresenter().getActiveMarker().getLocation())) {
-                        marker.showInfoWindow();
-                        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(decorator.getLocation(), 5);
-                        map.animateCamera(cameraUpdate);
-                    }
+                mClusterManager.addItems(weatherMarkers);
+                WeatherMarker activeMarker = getPresenter().getActiveMarker();
+                if (activeMarker != null) {
+                    activeMarkerPosition = activeMarker.getPosition();
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(activeMarkerPosition, 5));
                 }
             }
+            mClusterManager.cluster();
         }
     }
+
+    class PopupAdapter implements GoogleMap.InfoWindowAdapter {
+
+        private View popup = null;
+        private LayoutInflater inflater = null;
+
+        public PopupAdapter(LayoutInflater inflater) {
+            this.inflater = inflater;
+        }
+
+        @Override
+        public View getInfoWindow(Marker marker) {
+            return null;
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            if (popup == null) {
+                popup = inflater.inflate(R.layout.popup, null);
+            }
+            TextView tv = (TextView) popup.findViewById(R.id.title);
+            tv.setText(R.string.marker_title);
+            if (chosenMarker != null) {
+                tv = (TextView) popup.findViewById(R.id.snippet);
+                tv.setText(chosenMarker.getTextDecorator()
+                        .getText(chosenMarker.getWeather(), getContext()));
+            }
+            return (popup);
+        }
+    }
+
+    class MyClusterRenderer extends DefaultClusterRenderer<WeatherMarker> {
+
+        public MyClusterRenderer(Context context, GoogleMap map,
+                                 ClusterManager<WeatherMarker> clusterManager) {
+            super(context, map, clusterManager);
+        }
+
+        @Override
+        protected void onBeforeClusterItemRendered(WeatherMarker item, MarkerOptions markerOptions) {
+            super.onBeforeClusterItemRendered(item, markerOptions);
+        }
+
+        @Override
+        protected void onClusterItemRendered(WeatherMarker clusterItem, Marker marker) {
+            super.onClusterItemRendered(clusterItem, marker);
+            if (activeMarkerPosition != null && activeMarkerPosition.equals(marker.getPosition())) {
+                chosenMarker = clusterItem;
+                marker.showInfoWindow();
+            }
+            //here you have access to the marker itself
+        }
+    }
+
+
 }
