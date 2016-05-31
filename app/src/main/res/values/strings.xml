@@ -10,10 +10,13 @@
     <string name="menu_item_settings">Settings</string>
     <string name="dialog_marker_settings_title">Marker settings</string>
     <string name="decorator_title_current_temperature">Current temperature</string>
-    <string name="decorator_title_country_code">Country code</string>
     <string name="decorator_title_location_name">Location name</string>
     <string name="decorator_title_country_name">Country name</string>
     <string name="marker_title">Current weather</string>
     <string name="massage_error_cod_not_equals_try_again">Weather is not available, please try again later.</string>
     <string name="massage_error_cod_not_equals_last_result">Weather is not available, shows outdated data.</string>
+    <string name="decorator_title_pressure">Pressure</string>
+    <string name="decorator_title_humidity">Humidity</string>
+    <string name="decorator_title_weather">Weather</string>
+    <string name="decorator_title_weather_description">Weather description</string>
 </resources>

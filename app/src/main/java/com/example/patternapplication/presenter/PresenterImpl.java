@@ -13,12 +13,15 @@ import com.example.patternapplication.model.marker.DecoratorItemSettings;
 import com.example.patternapplication.model.marker.DecoratorSettings;
 import com.example.patternapplication.model.marker.WeatherMarker;
 import com.example.patternapplication.model.marker.decorator.BaseDecorator;
-import com.example.patternapplication.model.marker.decorator.CountryCodeDecorator;
+import com.example.patternapplication.model.marker.decorator.HumidityDecorator;
+import com.example.patternapplication.model.marker.decorator.PressureDecorator;
 import com.example.patternapplication.model.marker.decorator.CountryNameDecorator;
 import com.example.patternapplication.model.marker.decorator.DecoratorMock;
 import com.example.patternapplication.model.marker.decorator.LocationNameDecorator;
 import com.example.patternapplication.model.marker.decorator.TemperatureDecorator;
 import com.example.patternapplication.model.marker.decorator.TextDecorator;
+import com.example.patternapplication.model.marker.decorator.WeatherDescriptionDecorator;
+import com.example.patternapplication.model.marker.decorator.WeatherMainDecorator;
 import com.example.patternapplication.view.IMainActivity;
 import com.example.patternapplication.view.fragments.BaseFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -245,12 +248,18 @@ public class PresenterImpl implements IPresenter {
         switch (decoratorId) {
             case DecoratorConstants.TEMPERATURE_ID:
                 return new TemperatureDecorator(markerDecorator);
-            case DecoratorConstants.COUNTRY_CODE_ID:
-                return new CountryCodeDecorator(markerDecorator);
+            case DecoratorConstants.PRESSURE_ID:
+                return new PressureDecorator(markerDecorator);
             case DecoratorConstants.COUNTRY_NAME_ID:
                 return new CountryNameDecorator(markerDecorator);
             case DecoratorConstants.LOCATION_NAME_ID:
                 return new LocationNameDecorator(markerDecorator);
+            case DecoratorConstants.HUMIDITY_ID:
+                return new HumidityDecorator(markerDecorator);
+            case DecoratorConstants.MAIN_WEATHER_ID:
+                return new WeatherMainDecorator(markerDecorator);
+            case DecoratorConstants.DESCRIPTION_WEATHER_ID:
+                return new WeatherDescriptionDecorator(markerDecorator);
             default:
                 return markerDecorator;
         }
