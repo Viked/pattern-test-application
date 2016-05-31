@@ -13,11 +13,11 @@ import com.example.patternapplication.model.marker.DecoratorItemSettings;
 import com.example.patternapplication.model.marker.DecoratorSettings;
 import com.example.patternapplication.model.marker.WeatherMarker;
 import com.example.patternapplication.model.marker.decorator.BaseDecorator;
-import com.example.patternapplication.model.marker.decorator.HumidityDecorator;
-import com.example.patternapplication.model.marker.decorator.PressureDecorator;
 import com.example.patternapplication.model.marker.decorator.CountryNameDecorator;
 import com.example.patternapplication.model.marker.decorator.DecoratorMock;
+import com.example.patternapplication.model.marker.decorator.HumidityDecorator;
 import com.example.patternapplication.model.marker.decorator.LocationNameDecorator;
+import com.example.patternapplication.model.marker.decorator.PressureDecorator;
 import com.example.patternapplication.model.marker.decorator.TemperatureDecorator;
 import com.example.patternapplication.model.marker.decorator.TextDecorator;
 import com.example.patternapplication.model.marker.decorator.WeatherDescriptionDecorator;
@@ -114,7 +114,6 @@ public class PresenterImpl implements IPresenter {
     @Override
     public void requestUpdate() {
         activity.reloadDB(null);
-
     }
 
     @Override
@@ -144,6 +143,7 @@ public class PresenterImpl implements IPresenter {
         if (weather != null) {
             long time = Calendar.getInstance().getTimeInMillis() - weather.getTime();
             if (time < UPDATE_TIME_THRESHOLD) {
+                activeMarkerKey = latLng;
                 dataObservable.notifyObservers(weather);
                 requestUpdate();
             } else {
@@ -152,10 +152,10 @@ public class PresenterImpl implements IPresenter {
                     @Override
                     public void onResponse(Call<RequestedWeather> call, Response<RequestedWeather> response) {
                         RequestedWeather weather = response.body();
-                        if(testRequestResult(weather)){
+                        if (testRequestResult(weather)) {
                             dbModel.editRec(weather);
-                            dataObservable.notifyObservers(weather);
                             activeMarkerKey = latLng;
+                            dataObservable.notifyObservers(weather);
                         } else {
                             activity.showMassage(R.string.massage_error_cod_not_equals_last_result);
                         }
@@ -174,11 +174,11 @@ public class PresenterImpl implements IPresenter {
                 @Override
                 public void onResponse(Call<RequestedWeather> call, Response<RequestedWeather> response) {
                     RequestedWeather weather = response.body();
-                    if(testRequestResult(weather)){
+                    if (testRequestResult(weather)) {
                         weather.setMapCoordinates(latLng);
                         dbModel.addRec(weather);
-                        dataObservable.notifyObservers(weather);
                         activeMarkerKey = latLng;
+                        dataObservable.notifyObservers(weather);
                     } else {
                         activity.showMassage(R.string.massage_error_cod_not_equals_try_again);
                         dataObservable.deleteObserver(marker);
@@ -265,10 +265,9 @@ public class PresenterImpl implements IPresenter {
         }
     }
 
-    private boolean testRequestResult(RequestedWeather weather){
+    private boolean testRequestResult(RequestedWeather weather) {
         return weather.getCod().equals(NORMAL_COD);
     }
-
 
 
 }

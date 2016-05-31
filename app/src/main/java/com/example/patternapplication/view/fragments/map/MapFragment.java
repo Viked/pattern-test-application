@@ -16,9 +16,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
@@ -36,8 +33,6 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     private GoogleMap map;
     private ClusterManager<WeatherMarker> mClusterManager;
     private WeatherMarker chosenMarker;
-    private LatLng activeMarkerPosition = null;
-
 
     @Nullable
     @Override
@@ -88,12 +83,11 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
         googleMap.setOnCameraChangeListener(mClusterManager);
         googleMap.setOnMarkerClickListener(mClusterManager);
         map.setInfoWindowAdapter(mClusterManager.getMarkerManager());
+        mClusterManager.setRenderer(new MyClusterRenderer(getContext(), map, mClusterManager));
         mClusterManager.setOnClusterItemClickListener(marker -> {
             chosenMarker = marker;
             return false;
         });
-        mClusterManager.setRenderer(new MyClusterRenderer(getContext(), map, mClusterManager));
-
     }
 
     @Override
@@ -103,13 +97,18 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
             List<WeatherMarker> weatherMarkers = getPresenter().getMarkerList();
             if (weatherMarkers.size() > 0) {
                 mClusterManager.addItems(weatherMarkers);
-                WeatherMarker activeMarker = getPresenter().getActiveMarker();
-                if (activeMarker != null) {
-                    activeMarkerPosition = activeMarker.getPosition();
-                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(activeMarkerPosition, 5));
-                }
             }
             mClusterManager.cluster();
+            chosenMarker = getPresenter().getActiveMarker();
+            if (chosenMarker != null) {
+                for (Marker marker : mClusterManager.getMarkerCollection().getMarkers()) {
+                    if (marker.getPosition().equals(chosenMarker.getPosition())) {
+                        marker.showInfoWindow();
+                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 5));
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -160,13 +159,12 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
         @Override
         protected void onClusterItemRendered(WeatherMarker clusterItem, Marker marker) {
             super.onClusterItemRendered(clusterItem, marker);
-            if (activeMarkerPosition != null && activeMarkerPosition.equals(marker.getPosition())) {
-                chosenMarker = clusterItem;
+            if (chosenMarker != null && marker.getPosition().equals(chosenMarker.getPosition())) {
                 marker.showInfoWindow();
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 5));
             }
-            //here you have access to the marker itself
         }
     }
-
-
 }
+
+
