@@ -19,4 +19,5 @@
     <string name="decorator_title_humidity">Humidity</string>
     <string name="decorator_title_weather">Weather</string>
     <string name="decorator_title_weather_description">Weather description</string>
+    <string name="last_update_time">Last update</string>
 </resources>

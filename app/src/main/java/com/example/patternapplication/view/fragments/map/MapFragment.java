@@ -106,7 +106,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
                 for (Marker marker : mClusterManager.getMarkerCollection().getMarkers()) {
                     if (marker.getPosition().equals(chosenMarker.getPosition())) {
                         marker.showInfoWindow();
-                        if(!cameraMoved) {
+                        if (!cameraMoved) {
                             map.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 5));
                             cameraMoved = true;
                         }
@@ -166,7 +166,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
             super.onClusterItemRendered(clusterItem, marker);
             if (chosenMarker != null && marker.getPosition().equals(chosenMarker.getPosition())) {
                 marker.showInfoWindow();
-                if(!cameraMoved) {
+                if (!cameraMoved) {
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 5));
                     cameraMoved = true;
                 }

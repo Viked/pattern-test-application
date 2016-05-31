@@ -138,7 +138,7 @@ public class PresenterImpl implements IPresenter {
         WeatherMarker marker = new WeatherMarker(latLng);
         dataObservable.addObserver(marker);
         markerMap.put(latLng, marker);
-        decorateMarker(marker);
+        marker.setTextDecorator(getDecorator());
         RequestedWeather weather = dbModel.getWeatherByCoordinates(latLng, COORDINATE_ERROR);
         if (weather != null) {
             long time = Calendar.getInstance().getTimeInMillis() - weather.getTime();
@@ -228,20 +228,23 @@ public class PresenterImpl implements IPresenter {
         return markerMap.get(activeMarkerKey);
     }
 
-    private void decorateMarkers() {
-        for (WeatherMarker weatherMarker : markerMap.values()) {
-            decorateMarker(weatherMarker);
-        }
-        markerDecoratorActuality = true;
-    }
-
-    private void decorateMarker(WeatherMarker marker) {
-        marker.setTextDecorator(new BaseDecorator(new DecoratorMock()));
+    @Override
+    public TextDecorator getDecorator() {
+        TextDecorator out = new BaseDecorator(new DecoratorMock());
         for (int i = settings.size() - 1; i > -1; i--) {
             if (settings.get(i).isChecked()) {
-                marker.setTextDecorator(decorateMarker(settings.get(i).getId(), marker.getTextDecorator()));
+                out = (decorateMarker(settings.get(i).getId(), out));
             }
         }
+        return out;
+    }
+
+    private void decorateMarkers() {
+        TextDecorator decorator = getDecorator();
+        for (WeatherMarker weatherMarker : markerMap.values()) {
+            weatherMarker.setTextDecorator(decorator);
+        }
+        markerDecoratorActuality = true;
     }
 
     private TextDecorator decorateMarker(int decoratorId, TextDecorator markerDecorator) {
