@@ -33,6 +33,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     private GoogleMap map;
     private ClusterManager<WeatherMarker> mClusterManager;
     private WeatherMarker chosenMarker;
+    private boolean cameraMoved = false;
 
     @Nullable
     @Override
@@ -77,7 +78,6 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
         googleMap.setOnMapClickListener(getPresenter()::addLocation);
-        getPresenter().requestUpdate();
         mClusterManager = new ClusterManager<>(getContext(), googleMap);
         mClusterManager.getMarkerCollection().setOnInfoWindowAdapter(new PopupAdapter(getActivity().getLayoutInflater()));
         googleMap.setOnCameraChangeListener(mClusterManager);
@@ -88,10 +88,12 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
             chosenMarker = marker;
             return false;
         });
+        getPresenter().requestUpdate();
     }
 
     @Override
     public void update(Observable observable, Object data) {
+        cameraMoved = false;
         if (map != null) {
             mClusterManager.clearItems();
             List<WeatherMarker> weatherMarkers = getPresenter().getMarkerList();
@@ -104,7 +106,10 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
                 for (Marker marker : mClusterManager.getMarkerCollection().getMarkers()) {
                     if (marker.getPosition().equals(chosenMarker.getPosition())) {
                         marker.showInfoWindow();
-                        map.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 5));
+                        if(!cameraMoved) {
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 5));
+                            cameraMoved = true;
+                        }
                         break;
                     }
                 }
@@ -161,7 +166,10 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
             super.onClusterItemRendered(clusterItem, marker);
             if (chosenMarker != null && marker.getPosition().equals(chosenMarker.getPosition())) {
                 marker.showInfoWindow();
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 5));
+                if(!cameraMoved) {
+                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 5));
+                    cameraMoved = true;
+                }
             }
         }
     }
