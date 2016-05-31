@@ -100,6 +100,7 @@ public class DBConstants {
     public static final String BUNDLE_ARG_ORDER_BY = "order_by";
 
     public static final String order = " ASC";
+    public static final String order_time = " DESC";
 
 }
 

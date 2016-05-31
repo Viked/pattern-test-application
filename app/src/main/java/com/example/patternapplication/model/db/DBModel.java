@@ -65,7 +65,7 @@ public class DBModel implements IDBModel {
     public Cursor getNewDBCursor() {
         Bundle args = new Bundle();
         args.putString(DBConstants.BUNDLE_ARG_ORDER_BY,
-                DBConstants.COLUMN_SYS_COUNTRY + DBConstants.order);
+                DBConstants.COLUMN_TIME + DBConstants.order_time);
         return getNewDBCursor(args);
     }
 
