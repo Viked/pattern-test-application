@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
@@ -78,6 +79,12 @@ public abstract class AbstractRecyclerViewAdapter<T, C> extends RecyclerView.Ada
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback());
         itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        RecyclerView.ItemAnimator itemAnimator = new DefaultItemAnimator();
+        itemAnimator.setAddDuration(1000);
+        itemAnimator.setRemoveDuration(1000);
+        recyclerView.setItemAnimator(itemAnimator);
+
     }
 
     private class ItemTouchHelperCallback extends ItemTouchHelper.SimpleCallback {

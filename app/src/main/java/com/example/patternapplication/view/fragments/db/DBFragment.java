@@ -71,7 +71,6 @@ public class DBFragment extends BaseListFragment<DBAdapter> {
             }else {
                 formattedDate = formatTime.format(date);
             }
-
             temp.add(0, formattedDate);
             temp.add(0, itemView.getContext().getString(R.string.last_update_time));
             return temp;
