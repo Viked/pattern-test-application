@@ -128,24 +128,22 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
         @Override
         public View getInfoWindow(Marker marker) {
-            return null;
-        }
-
-        @Override
-        public View getInfoContents(Marker marker) {
             if (popup == null) {
-                popup = inflater.inflate(R.layout.popup, null);
+                popup = inflater.inflate(R.layout.fragment_lict_row, null);
             }
             ImageView imageView = (ImageView) popup.findViewById(R.id.image);
             imageView.setImageResource(R.drawable.weather_cloudy);
-            TextView tv = (TextView) popup.findViewById(R.id.title);
-            tv.setText(R.string.marker_title);
             if (chosenMarker != null) {
-                tv = (TextView) popup.findViewById(R.id.snippet);
+                TextView tv = (TextView) popup.findViewById(R.id.text);
                 tv.setText(chosenMarker.getTextDecorator()
                         .getText(chosenMarker.getWeather(), getContext()));
             }
             return (popup);
+        }
+
+        @Override
+        public View getInfoContents(Marker marker) {
+            return null;
         }
     }
 
