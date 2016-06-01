@@ -1,35 +1,37 @@
 package com.example.patternapplication.view;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
+import android.app.FragmentManager;
+import android.content.res.Configuration;
 import android.database.Cursor;
-import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.example.patternapplication.R;
 import com.example.patternapplication.WeatherApplication;
 import com.example.patternapplication.model.db.DBLoader;
 import com.example.patternapplication.presenter.IPresenter;
+import com.example.patternapplication.view.adapters.DrawerRecycleViewAdapter;
 import com.example.patternapplication.view.adapters.MyPagerAdapter;
 import com.example.patternapplication.view.dialogs.MarkerSettingsDialog;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 
-public class MainActivity extends AppCompatActivity implements IMainActivity, LoaderManager.LoaderCallbacks<Cursor>, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends AppCompatActivity implements IMainActivity, LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int MY_DB_ID = 0;
 
@@ -38,42 +40,68 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
     //open weather api key d45545a62ad42fe8a840303b8600c6d8
     private IPresenter presenter;
 
-    private GoogleApiClient apiClient;
-
     private MyPagerAdapter pagerAdapter;
 
+    private Toolbar toolbar;
+
     private ViewPager mViewPager;
+
+    private LatLng startCoordinates = null;
+
+    private DrawerLayout mDrawerLayout;
+
+    private ActionBarDrawerToggle mDrawerToggle;
+
+    private CharSequence mDrawerTitle;
+
+    private CharSequence mTitle;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+
+
+
+
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,
+                mDrawerLayout,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+        mDrawerToggle.setDrawerIndicatorEnabled(true);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
+
+        mTitle = mDrawerTitle = getTitle();
 
         String[] titles = new String[]{getString(R.string.fragment_title_map),
                 getString(R.string.fragment_title_marker_list),
                 getString(R.string.fragment_title_db)};
         pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), titles);
 
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(pagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-
         if (savedInstanceState == null) {
-            apiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
+            startCoordinates = new LatLng(
+                    getIntent().getDoubleExtra(SplashActivity.LAT, SplashActivity.romeLatitude),
+                    getIntent().getDoubleExtra(SplashActivity.LNG, SplashActivity.romeLongitude));
         }
-
     }
-
 
 
     @Override
@@ -85,9 +113,11 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (mDrawerToggle.onOptionsItemSelected(item))
+            return true;
+
         switch (item.getItemId()) {
             case MENU_SETTINGS_ID:
                 new MarkerSettingsDialog().show(getSupportFragmentManager(),
@@ -104,17 +134,27 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
         super.onResume();
         presenter = ((WeatherApplication) getApplication()).getPresenter();
         presenter.setActivity(this);
-        if (apiClient != null) {
-            apiClient.connect();
+        if (startCoordinates!=null){
+            presenter.addLocation(startCoordinates);
         }
     }
 
     @Override
     protected void onDestroy() {
-        if (apiClient != null) {
-            apiClient.disconnect();
-        }
+        presenter.setActivity(null);
         super.onDestroy();
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -134,26 +174,6 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
     @Override
     public void loadDB() {
         getSupportLoaderManager().initLoader(MY_DB_ID, null, this);
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
-            if (mLastLocation != null) {
-                presenter.addLocation(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
-            }
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 
 
@@ -176,4 +196,34 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
     public void showFragment(int i) {
         mViewPager.setCurrentItem(i, true);
     }
+
+    private void selectItem(int position) {
+        /*
+        // Create a new fragment and specify the planet to show based on position
+        Fragment fragment = new PlanetFragment();
+        Bundle args = new Bundle();
+        args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
+        fragment.setArguments(args);
+
+        // Insert the fragment by replacing any existing fragment
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .commit();
+
+        // Highlight the selected item, update the title, and close the drawer
+        mDrawerList.setItemChecked(position, true);
+        setTitle(mPlanetTitles[position]);
+        mDrawerLayout.closeDrawer(mDrawerList);
+        */
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        toolbar.setTitle(mTitle);
+    }
+
+
+
+
 }

@@ -16,12 +16,16 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCtHZZYn0X9JX1I9n8vwnxs4C0_wF0ocTA" />
-        <activity android:name=".view.MainActivity">
+
+        <activity android:name=".view.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+
+        <activity android:name=".view.MainActivity">
         </activity>
     </application>
 
