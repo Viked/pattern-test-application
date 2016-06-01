@@ -1,37 +1,30 @@
 package com.example.patternapplication.view;
 
-import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.example.patternapplication.R;
 import com.example.patternapplication.WeatherApplication;
 import com.example.patternapplication.model.db.DBLoader;
 import com.example.patternapplication.presenter.IPresenter;
-import com.example.patternapplication.view.adapters.DrawerRecycleViewAdapter;
 import com.example.patternapplication.view.adapters.MyPagerAdapter;
 import com.example.patternapplication.view.dialogs.MarkerSettingsDialog;
 import com.google.android.gms.maps.model.LatLng;
 
-public class MainActivity extends AppCompatActivity implements IMainActivity, LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity implements IMainActivity, LoaderManager.LoaderCallbacks<Cursor>, NavigationView.OnNavigationItemSelectedListener {
 
     private static final int MY_DB_ID = 0;
 
@@ -50,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
 
     private DrawerLayout mDrawerLayout;
 
+    private NavigationView navigationView;
+
     private ActionBarDrawerToggle mDrawerToggle;
 
     private CharSequence mDrawerTitle;
@@ -57,16 +52,10 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
     private CharSequence mTitle;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
-
-
 
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -84,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
         mDrawerToggle.setDrawerIndicatorEnabled(true);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
 
+        navigationView = (NavigationView) findViewById(R.id.navigation);
+        navigationView.setNavigationItemSelectedListener(this);
         mTitle = mDrawerTitle = getTitle();
 
         String[] titles = new String[]{getString(R.string.fragment_title_map),
@@ -106,26 +97,26 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        menu = navigationView.getMenu();
         MenuItem settings = menu.add(Menu.NONE, MENU_SETTINGS_ID, Menu.NONE, R.string.menu_item_settings);
         settings.setIcon(R.drawable.ic_settings);
-        settings.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return super.onCreateOptionsMenu(menu);
     }
 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item))
-            return true;
-
         switch (item.getItemId()) {
             case MENU_SETTINGS_ID:
                 new MarkerSettingsDialog().show(getSupportFragmentManager(),
                         MarkerSettingsDialog.class.getName());
                 return true;
             default:
-                return super.onOptionsItemSelected(item);
-
+                if (mDrawerToggle.onOptionsItemSelected(item)) {
+                    return true;
+                } else {
+                    return super.onOptionsItemSelected(item);
+                }
         }
     }
 
@@ -134,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
         super.onResume();
         presenter = ((WeatherApplication) getApplication()).getPresenter();
         presenter.setActivity(this);
-        if (startCoordinates!=null){
+        if (startCoordinates != null) {
             presenter.addLocation(startCoordinates);
         }
     }
@@ -224,6 +215,16 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
     }
 
 
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case MENU_SETTINGS_ID:
+                new MarkerSettingsDialog().show(getSupportFragmentManager(),
+                        MarkerSettingsDialog.class.getName());
+                return true;
+            default:
+                return false;
 
-
+        }
+    }
 }
