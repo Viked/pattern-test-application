@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.patternapplication.R;
 import com.example.patternapplication.model.marker.WeatherMarker;
+import com.example.patternapplication.view.adapters.PopupViewHolder;
 import com.example.patternapplication.view.fragments.BaseFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -79,7 +80,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
         map = googleMap;
         googleMap.setOnMapClickListener(getPresenter()::addLocation);
         mClusterManager = new ClusterManager<>(getContext(), googleMap);
-        mClusterManager.getMarkerCollection().setOnInfoWindowAdapter(new PopupAdapter(getActivity().getLayoutInflater()));
+        mClusterManager.getMarkerCollection().setOnInfoWindowAdapter(new PopupAdapter(getContext()));
         googleMap.setOnCameraChangeListener(mClusterManager);
         googleMap.setOnMarkerClickListener(mClusterManager);
         map.setInfoWindowAdapter(mClusterManager.getMarkerManager());
@@ -119,26 +120,18 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback {
 
     class PopupAdapter implements GoogleMap.InfoWindowAdapter {
 
-        private View popup = null;
-        private LayoutInflater inflater = null;
+        private PopupViewHolder popup = null;
 
-        public PopupAdapter(LayoutInflater inflater) {
-            this.inflater = inflater;
+        public PopupAdapter(Context context) {
+            popup = new PopupViewHolder(context);
         }
 
         @Override
         public View getInfoWindow(Marker marker) {
-            if (popup == null) {
-                popup = inflater.inflate(R.layout.fragment_lict_row, null);
-            }
-            ImageView imageView = (ImageView) popup.findViewById(R.id.image);
-            imageView.setImageResource(R.drawable.weather_cloudy);
             if (chosenMarker != null) {
-                TextView tv = (TextView) popup.findViewById(R.id.text);
-                tv.setText(chosenMarker.getTextDecorator()
-                        .getText(chosenMarker.getWeather(), getContext()));
+                popup.bindData(chosenMarker);
             }
-            return (popup);
+            return (popup.getView());
         }
 
         @Override

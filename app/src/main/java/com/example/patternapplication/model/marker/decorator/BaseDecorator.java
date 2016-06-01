@@ -4,6 +4,9 @@ import android.content.Context;
 
 import com.example.patternapplication.model.data.RequestedWeather;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by viked on 27.05.16.
  */
@@ -16,7 +19,7 @@ public class BaseDecorator implements TextDecorator {
     }
 
     @Override
-    public String getText(RequestedWeather weather, Context context) {
+    public List<String> getText(RequestedWeather weather, Context context) {
         return textDecorator.getText(weather, context);
     }
 }

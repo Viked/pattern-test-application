@@ -74,9 +74,6 @@ public class DecoratorSettings {
                 DecoratorConstants.LOCATION_NAME_ID,
                 R.string.decorator_title_location_name));
         out.add(new DecoratorItemSettings( false,
-                DecoratorConstants.LOCATION_NAME_ID,
-                R.string.decorator_title_location_name));
-        out.add(new DecoratorItemSettings( false,
                 DecoratorConstants.PRESSURE_ID,
                 R.string.decorator_title_pressure));
         out.add(new DecoratorItemSettings( false,

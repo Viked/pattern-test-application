@@ -20,8 +20,7 @@ android {
     }
 
     dexOptions {
-        incremental true
-        javaMaxHeapSize "1g"
+        javaMaxHeapSize "2g"
     }
 
     buildTypes {

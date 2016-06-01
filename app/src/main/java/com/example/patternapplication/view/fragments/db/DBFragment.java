@@ -10,7 +10,11 @@ import com.example.patternapplication.view.adapters.AbstractViewHolder;
 import com.example.patternapplication.view.fragments.BaseListFragment;
 
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Locale;
 import java.util.Observable;
 
 /**
@@ -36,8 +40,9 @@ public class DBFragment extends BaseListFragment<DBAdapter> {
 
     private class DBViewHolder extends AbstractViewHolder<RequestedWeather> {
 
-        private DateFormat format = DateFormat.getDateTimeInstance();
-
+        private DateFormat formatDate = DateFormat.getDateInstance();
+        private DateFormat formatTime = DateFormat.getTimeInstance();
+        private Calendar calendar = Calendar.getInstance(Locale.getDefault());
         public DBViewHolder(View itemView) {
             super(itemView);
         }
@@ -45,12 +50,6 @@ public class DBFragment extends BaseListFragment<DBAdapter> {
         @Override
         public void bindData(RequestedWeather data) {
             super.bindData(data);
-            StringBuffer text = new StringBuffer(itemView.getContext().getString(R.string.last_update_time))
-                    .append(": ")
-                    .append(format.format(new Date(data.getTime())))
-                    .append("\n")
-                    .append(decorator.getText(data, itemView.getContext()));
-            getTextView().setText(text.toString());
             getImageView().setImageResource(R.drawable.weather_cloudy);
         }
 
@@ -61,7 +60,26 @@ public class DBFragment extends BaseListFragment<DBAdapter> {
         }
 
         @Override
+        public List<String> getContentList(RequestedWeather data) {
+            List<String> temp = decorator.getText(data, itemView.getContext());
+            Date date = new Date(data.getTime());
+            long diff = calendar.getTimeInMillis() - date.getTime();
+            long days = diff / (24 * 60 * 60 * 1000);
+            String formattedDate;
+            if(days>0){
+                formattedDate = formatDate.format(date);
+            }else {
+                formattedDate = formatTime.format(date);
+            }
+
+            temp.add(0, formattedDate);
+            temp.add(0, itemView.getContext().getString(R.string.last_update_time));
+            return temp;
+        }
+
+        @Override
         public void bindView() {
+            super.bindView();
             itemView.setOnClickListener(v -> getPresenter().showMarker(v.getTag()));
         }
     }

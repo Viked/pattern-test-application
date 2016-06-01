@@ -8,6 +8,7 @@ import com.example.patternapplication.model.marker.WeatherMarker;
 import com.example.patternapplication.view.adapters.AbstractViewHolder;
 import com.example.patternapplication.view.fragments.BaseListFragment;
 
+import java.util.List;
 import java.util.Observable;
 
 /**
@@ -36,7 +37,6 @@ public class MarkerListFragment extends BaseListFragment<MarkerAdapter> {
             super.bindData(data);
             RequestedWeather weather = data.getWeather();
             if (weather != null) {
-                getTextView().setText(data.getTextDecorator().getText(weather, itemView.getContext()));
                 getImageView().setImageResource(R.drawable.weather_cloudy);
             }
         }
@@ -47,7 +47,13 @@ public class MarkerListFragment extends BaseListFragment<MarkerAdapter> {
         }
 
         @Override
+        public List<String> getContentList(WeatherMarker data) {
+            return data.getTextDecorator().getText(data.getWeather(), itemView.getContext());
+        }
+
+        @Override
         public void bindView() {
+            super.bindView();
             itemView.setOnClickListener(v -> getPresenter().showMarker(v.getTag()));
         }
 

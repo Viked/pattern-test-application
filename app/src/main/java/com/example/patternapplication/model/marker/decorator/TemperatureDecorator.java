@@ -6,6 +6,8 @@ import com.example.patternapplication.R;
 import com.example.patternapplication.WeatherApplication;
 import com.example.patternapplication.model.data.RequestedWeather;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -18,10 +20,14 @@ public class TemperatureDecorator extends BaseDecorator {
     }
 
     @Override
-    public String getText(RequestedWeather weather, Context context) {
-        return context.getString(R.string.decorator_title_current_temperature) +
-                String.format(Locale.getDefault(), ": %.2f\n", (weather.getMain().getTemp() - 273.15)) +
-                super.getText(weather, context);
+    public List<String> getText(RequestedWeather weather, Context context) {
+        if(weather==null){
+            return new ArrayList<>();
+        }
+        List<String> temp = super.getText(weather, context);
+        temp.add(context.getString(R.string.decorator_title_temperature));
+        temp.add(String.format(Locale.getDefault(), "%.2f", (weather.getMain().getTemp() - 273.15)));
+        return temp;
     }
 
 }
