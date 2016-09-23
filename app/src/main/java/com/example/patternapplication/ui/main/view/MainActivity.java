@@ -1,5 +1,7 @@
-package com.example.patternapplication.view;
+package com.example.patternapplication.ui.main.view;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -11,24 +13,30 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import butterknife.Bind;
 
 import com.example.patternapplication.R;
 import com.example.patternapplication.WeatherApplication;
-import com.example.patternapplication.model.db.DBLoader;
+import com.example.patternapplication.common.BaseActivity;
 import com.example.patternapplication.presenter.IPresenter;
+import com.example.patternapplication.view.IMainActivity;
 import com.example.patternapplication.view.adapters.MyPagerAdapter;
 import com.example.patternapplication.view.dialogs.MarkerSettingsDialog;
 import com.google.android.gms.maps.model.LatLng;
 
-public class MainActivity extends AppCompatActivity implements IMainActivity, LoaderManager.LoaderCallbacks<Cursor>, NavigationView.OnNavigationItemSelectedListener {
+import butterknife.ButterKnife;
+
+public class MainActivity extends BaseActivity implements IMainActivity, LoaderManager.LoaderCallbacks<Cursor>, NavigationView.OnNavigationItemSelectedListener {
 
     private static final int MY_DB_ID = 0;
 
     private static final int MENU_SETTINGS_ID = 0;
+
+    public static final String LAT = "lat";
+    public static final String LNG = "lon";
 
     //open weather api key d45545a62ad42fe8a840303b8600c6d8
     private IPresenter presenter;
@@ -41,7 +49,9 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
 
     private LatLng startCoordinates = null;
 
-    private DrawerLayout mDrawerLayout;
+
+    @Bind(R.id.btn_LoadData)
+    DrawerLayout mDrawerLayout;
 
     private NavigationView navigationView;
 
@@ -52,11 +62,19 @@ public class MainActivity extends AppCompatActivity implements IMainActivity, Lo
     private CharSequence mTitle;
 
 
+    public static Intent getCallingIntent(Context context, double lat, double lng) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(LAT, lat);
+        intent.putExtra(LNG, lng);
+        return intent;
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        ButterKnife.bind(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

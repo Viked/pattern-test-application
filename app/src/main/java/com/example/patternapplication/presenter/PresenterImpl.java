@@ -3,7 +3,7 @@ package com.example.patternapplication.presenter;
 import android.app.Application;
 
 import com.example.patternapplication.R;
-import com.example.patternapplication.model.WeatherApiRequestInterface;
+import com.example.patternapplication.repository.api.WeatherApiRequestInterface;
 import com.example.patternapplication.model.WeatherModel;
 import com.example.patternapplication.model.data.RequestedWeather;
 import com.example.patternapplication.model.db.DBModel;

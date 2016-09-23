@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -17,7 +19,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCtHZZYn0X9JX1I9n8vwnxs4C0_wF0ocTA" />
 
-        <activity android:name=".view.SplashActivity">
+        <activity android:name=".ui.splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -25,8 +27,14 @@
         </activity>
 
 
-        <activity android:name=".view.MainActivity">
+        <activity android:name=".ui.main.view.MainActivity">
         </activity>
+
+        <provider
+            android:name=".repository.data.WeatherContentProvider"
+            android:authorities="com.example.patternapplication.provider"
+            android:exported="false" />
+
     </application>
 
 </manifest>

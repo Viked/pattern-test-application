@@ -1,13 +1,5 @@
 package com.example.patternapplication;
 
-import android.test.suitebuilder.annotation.SmallTest;
-
-import com.example.patternapplication.model.WeatherApiRequestInterface;
-import com.example.patternapplication.model.WeatherModel;
-import com.example.patternapplication.model.data.RequestedWeather;
-
-import org.junit.Test;
-
 
 /**
  * Created by Initb on 13.05.2016.

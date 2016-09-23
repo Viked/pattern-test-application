@@ -1,4 +1,4 @@
-package com.example.patternapplication.view;
+package com.example.patternapplication.ui.splash;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -26,9 +26,6 @@ import com.google.android.gms.location.LocationServices;
  * Created by viked on 01.06.16.
  */
 public class SplashActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-
-    public static final String LAT = "lat";
-    public static final String LNG = "lon";
 
     public static final double romeLatitude = 41.8919300;
     public static final double romeLongitude= 12.5113300;
@@ -104,14 +101,6 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
         ConnectivityManager cm = (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return (activeNetwork!=null && activeNetwork.isConnectedOrConnecting());
-    }
-
-    private void startActivityWithCoordinates(double lan, double lng) {
-        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-        intent.putExtra(LAT, lan);
-        intent.putExtra(LNG, lng);
-        startActivity(intent);
-        finish();
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.patternapplication.view;
+package com.example.patternapplication.constants;
 
 import com.example.patternapplication.R;
 

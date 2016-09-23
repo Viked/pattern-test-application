@@ -1,13 +1,10 @@
 package com.example.patternapplication;
 
-import android.database.Cursor;
-//import android.support.test.rule.ActivityTestRule;
-//import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
-import com.example.patternapplication.model.data.RequestedWeather;
-import com.example.patternapplication.model.db.DBModel;
-import com.example.patternapplication.view.MainActivity;
+//import android.support.test.rule.ActivityTestRule;
+//import android.support.test.runner.AndroidJUnit4;
+
 /*
 import org.junit.After;
 import org.junit.Before;

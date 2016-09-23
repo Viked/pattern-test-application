@@ -3,6 +3,9 @@ package com.example.patternapplication;
 import android.app.Application;
 import android.content.Context;
 
+import com.example.patternapplication.dagger.application.ApplicationComponent;
+import com.example.patternapplication.dagger.application.ApplicationModule;
+import com.example.patternapplication.dagger.application.DaggerApplicationComponent;
 import com.example.patternapplication.presenter.IPresenter;
 import com.example.patternapplication.presenter.PresenterImpl;
 
@@ -11,31 +14,23 @@ import com.example.patternapplication.presenter.PresenterImpl;
  */
 public class WeatherApplication extends Application {
 
-    private static Context application;
-
-    public static Context getContext() {
-        return application;
-    }
-
-    private IPresenter presenter;
-
-    public IPresenter getPresenter() {
-        return presenter;
-    }
+    private ApplicationComponent appComponent;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        application = this;
-        presenter = new PresenterImpl(this);
-        presenter.onCreate();
+        buildDagger();
+
     }
 
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-        presenter.onDestroy();
+    private void buildDagger() {
+        ApplicationModule appModule = new ApplicationModule(this);
+        appComponent = DaggerApplicationComponent.builder().applicationModule(appModule).build();
+        appComponent.inject(this);
     }
 
 
+    public ApplicationComponent getApplicationComponent() {
+        return appComponent;
+    }
 }
