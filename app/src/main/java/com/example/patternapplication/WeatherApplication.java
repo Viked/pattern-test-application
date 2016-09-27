@@ -1,13 +1,10 @@
 package com.example.patternapplication;
 
 import android.app.Application;
-import android.content.Context;
 
-import com.example.patternapplication.dagger.application.ApplicationComponent;
-import com.example.patternapplication.dagger.application.ApplicationModule;
+import viked.weathermap.dagger.application.ApplicationComponent;
+import viked.weathermap.dagger.application.ApplicationModule;
 import com.example.patternapplication.dagger.application.DaggerApplicationComponent;
-import com.example.patternapplication.presenter.IPresenter;
-import com.example.patternapplication.presenter.PresenterImpl;
 
 /**
  * Created by Initb on 13.05.2016.

@@ -65,6 +65,8 @@ dependencies {
     apt "com.google.dagger:dagger-compiler:2.5"
     provided 'org.glassfish:javax.annotation:10.0-b28'
 
+    compile 'com.hannesdorfmann:adapterdelegates2:2.0.1'
+
    // androidTestCompile 'junit:junit:4.12'
     //androidTestCompile 'com.android.support.test:runner:0.5'
     //androidTestCompile 'com.android.support.test:rules:0.5'

@@ -19,7 +19,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCtHZZYn0X9JX1I9n8vwnxs4C0_wF0ocTA" />
 
-        <activity android:name=".ui.splash.SplashActivity">
+        <activity android:name="viked.weathermap.ui.splash.view.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -27,7 +27,7 @@
         </activity>
 
 
-        <activity android:name=".ui.main.view.MainActivity">
+        <activity android:name="viked.weathermap.ui.main.view.MainActivity">
         </activity>
 
         <provider

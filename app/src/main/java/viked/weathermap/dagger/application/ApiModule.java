@@ -1,4 +1,4 @@
-package com.example.patternapplication.dagger.application;
+package viked.weathermap.dagger.application;
 
 import android.content.ContentResolver;
 

@@ -1,4 +1,4 @@
-package com.example.patternapplication.ui.main.presenter;
+package viked.weathermap.ui.main.presenter;
 
 /**
  * Created by Eugeniy Shein on 23.09.2016.

@@ -1,4 +1,4 @@
-package com.example.patternapplication.dagger;
+package viked.weathermap.dagger;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

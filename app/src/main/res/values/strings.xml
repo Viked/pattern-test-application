@@ -28,4 +28,9 @@
     <string name="title_rate_app">Rate</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="navigation_drawer_map">Map</string>
+    <string name="navigation_drawer_markers">Current markers</string>
+    <string name="navigation_drawer_history">History</string>
+    <string name="navigation_drawer_marker_settings">Marker settings</string>
 </resources>

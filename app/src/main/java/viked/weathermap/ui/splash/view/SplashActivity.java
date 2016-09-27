@@ -1,4 +1,4 @@
-package com.example.patternapplication.ui.splash;
+package viked.weathermap.ui.splash.view;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -33,7 +33,6 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     private GoogleApiClient apiClient;
 
     private ProgressDialog progressDialog = null;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +74,7 @@ public class SplashActivity extends AppCompatActivity implements GoogleApiClient
     protected void onDestroy() {
         apiClient.disconnect();
         super.onDestroy();
+        getContentResolver().toString().compareToIgnoreCase(apiClient.toString());
     }
 
     @Override
