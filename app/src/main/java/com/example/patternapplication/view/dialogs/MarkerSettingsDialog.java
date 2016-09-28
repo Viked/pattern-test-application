@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.patternapplication.R;
-import com.example.patternapplication.WeatherApplication;
 import com.example.patternapplication.model.marker.DecoratorItemSettings;
 import com.example.patternapplication.model.marker.DecoratorSettings;
 import com.example.patternapplication.view.adapters.SettingsDialogRecyclerViewAdapter;
@@ -53,7 +52,7 @@ public class MarkerSettingsDialog extends AppCompatDialogFragment {
     @Override
     public void onStop() {
         DecoratorSettings.setSettings(getContext(), list);
-        ((WeatherApplication)getContext().getApplicationContext()).getPresenter().requestUpdate();
+        ///((WeatherApplication)getContext().getApplicationContext()).getPresenter().requestUpdate();
         super.onStop();
     }
 }

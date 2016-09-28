@@ -6,10 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-import com.example.patternapplication.R;
-
 import java.util.List;
 
+import viked.weathermap.R;
 import viked.weathermap.constants.MapFragmentConstants;
 import viked.weathermap.ui.history.view.HistoryFragment;
 import viked.weathermap.ui.map.view.IMapView;
@@ -25,9 +24,9 @@ import viked.weathermap.ui.main.view.MainActivity;
 
 public class Navigator {
 
-    private void startMainActivity(Context context, double lan, double lng) {
+    public void startMainActivity(Context context) {
         if (context != null) {
-            Intent intentToLaunch = MainActivity.getCallingIntent(context, lan, lng);
+            Intent intentToLaunch = MainActivity.getCallingIntent(context);
             context.startActivity(intentToLaunch);
         }
     }

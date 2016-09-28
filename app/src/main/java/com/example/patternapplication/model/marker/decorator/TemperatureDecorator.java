@@ -3,7 +3,6 @@ package com.example.patternapplication.model.marker.decorator;
 import android.content.Context;
 
 import com.example.patternapplication.R;
-import com.example.patternapplication.WeatherApplication;
 import com.example.patternapplication.model.data.RequestedWeather;
 
 import java.util.ArrayList;

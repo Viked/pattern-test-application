@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -12,62 +13,70 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
-import com.example.patternapplication.R;
-import com.example.patternapplication.presenter.IPresenter;
-import com.example.patternapplication.view.IMainActivity;
-import com.google.android.gms.maps.model.LatLng;
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import viked.weathermap.R;
 import viked.weathermap.common.BaseActivity;
+import viked.weathermap.dagger.ui.main.MainActivityComponent;
+import viked.weathermap.dagger.ui.main.MainActivityModule;
+import viked.weathermap.ui.main.presenter.IMainActivityPresenter;
 
-public class MainActivity extends BaseActivity implements IMainActivity, NavigationView.OnNavigationItemSelectedListener {
-
-    public static final String LAT = "lat";
-    public static final String LNG = "lon";
+public class MainActivity extends BaseActivity implements IMainView, NavigationView.OnNavigationItemSelectedListener {
 
     //open weather api key d45545a62ad42fe8a840303b8600c6d8
 
     @BindView(R.id.toolbar)
-    private Toolbar toolbar;
+    Toolbar toolbar;
 
     @BindView(R.id.drawer_layout)
-    private DrawerLayout mDrawerLayout;
+    DrawerLayout mDrawerLayout;
 
     @BindView(R.id.navigation)
-    private NavigationView navigationView;
+    NavigationView navigationView;
 
     @BindView(R.id.tabs)
-    private TabLayout tabLayout;
+    TabLayout tabLayout;
 
-    private IPresenter presenter;
+    private MainActivityComponent component;
+
+    @Inject
+    private IMainActivityPresenter presenter;
 
     private ActionBarDrawerToggle mDrawerToggle;
 
-    private LatLng startCoordinates = null;
-
-    private CharSequence mDrawerTitle;
-
     private CharSequence mTitle;
 
-    public static Intent getCallingIntent(Context context, double lat, double lng) {
-        Intent intent = new Intent(context, MainActivity.class);
-        intent.putExtra(LAT, lat);
-        intent.putExtra(LNG, lng);
-        return intent;
+    public static Intent getCallingIntent(Context context) {
+        return new Intent(context, MainActivity.class);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        component = getApplicationComponent().plus(new MainActivityModule(this));
+        component.inject(this);
+
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
+        initNavigationView();
+
+        mTitle = getTitle();
+
+        if (savedInstanceState == null) {
+            initFrameLayout();
+        }
+    }
+
+    private void initNavigationView() {
         mDrawerToggle = new ActionBarDrawerToggle(
                 this,
                 mDrawerLayout,
@@ -77,14 +86,6 @@ public class MainActivity extends BaseActivity implements IMainActivity, Navigat
         mDrawerLayout.addDrawerListener(mDrawerToggle);
 
         navigationView.setNavigationItemSelectedListener(this);
-        mTitle = mDrawerTitle = getTitle();
-
-        if (savedInstanceState == null) {
-            startCoordinates = new LatLng(
-                    getIntent().getDoubleExtra(LAT, 0),
-                    getIntent().getDoubleExtra(LNG, 0));
-            presenter.addLocation(startCoordinates);
-        }
     }
 
     @Override
@@ -107,6 +108,7 @@ public class MainActivity extends BaseActivity implements IMainActivity, Navigat
 
     @Override
     public void setupViewPager(ViewPager viewPager) {
+        tabLayout.setVisibility(viewPager != null ? View.VISIBLE : View.GONE);
         tabLayout.setupWithViewPager(viewPager);
     }
 
@@ -116,4 +118,13 @@ public class MainActivity extends BaseActivity implements IMainActivity, Navigat
         return true;
     }
 
+    private void initFrameLayout() {
+        navigationView.setCheckedItem(R.id.nav_map);
+    }
+
+    @Nullable
+    @Override
+    public MainActivityComponent getActivityComponent() {
+        return component;
+    }
 }

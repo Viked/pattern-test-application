@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import com.example.patternapplication.WeatherApplication;
 import com.example.patternapplication.presenter.IPresenter;
 
 import java.util.Observer;
@@ -24,7 +23,7 @@ public abstract class BaseFragment extends Fragment implements Observer {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        presenter = ((WeatherApplication)context.getApplicationContext()).getPresenter();
+       // presenter = ((WeatherApplication)context.getApplicationContext()).getPresenter();
     }
 
     @Override
