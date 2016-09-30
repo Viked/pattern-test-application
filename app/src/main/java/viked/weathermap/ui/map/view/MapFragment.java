@@ -20,7 +20,7 @@ import viked.weathermap.ui.map.presenter.IMapPresenter;
  * Created by Eugeniy Shein on 27.09.2016.
  */
 
-public class MapFragment extends Fragment {
+public class MapFragment extends BaseMapFragment {
 
     @BindView(R.id.map)
     MapView mapView;
@@ -68,4 +68,18 @@ public class MapFragment extends Fragment {
         super.onDestroy();
     }
 
+    @Override
+    void attachToPresenter() {
+        presenter.addFragment(this);
+    }
+
+    @Override
+    void detachToPresenter() {
+        presenter.releseFragment(this);
+    }
+
+    @Override
+    void updateView() {
+
+    }
 }

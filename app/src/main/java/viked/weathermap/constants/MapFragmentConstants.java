@@ -22,4 +22,6 @@ public class MapFragmentConstants {
 
     public static final String SELECT_FRAGMENT_INDEX_KEY = "selected_item";
 
+    public static final int WEATHER_CONTENT_SPAN_COUNT = 2;
+
 }
