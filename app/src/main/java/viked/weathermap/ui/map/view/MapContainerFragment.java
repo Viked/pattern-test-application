@@ -8,15 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.patternapplication.R;
-
 import javax.inject.Inject;
 
+import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import viked.weathermap.R;
+import viked.weathermap.common.BaseActivity;
+import viked.weathermap.dagger.ui.main.MainActivityComponent;
+import viked.weathermap.dagger.ui.map.MapComponent;
+import viked.weathermap.dagger.ui.map.MapModule;
 import viked.weathermap.ui.map.presenter.IMapPresenter;
-
-import static viked.weathermap.constants.MapFragmentConstants.SELECT_FRAGMENT_INDEX_KEY;
 
 /**
  * Created by Eugeniy Shein on 27.09.2016.
@@ -25,18 +27,17 @@ import static viked.weathermap.constants.MapFragmentConstants.SELECT_FRAGMENT_IN
 public class MapContainerFragment extends Fragment implements IMapView {
 
     @BindView(R.id.fragment_map_container_view_pager)
-    private ViewPager viewPager;
+    ViewPager viewPager;
+
+    @BindArray(R.array.fragment_map_container_titles)
+    String[] fragmentTitles;
 
     @Inject
     private IMapPresenter presenter;
 
-    private MapContainerPagerAdapter fragmentAdapter;
+    private MapComponent component;
 
-    public static Bundle getArguments(int selectedPage){
-        Bundle args = new Bundle();
-        args.putInt(SELECT_FRAGMENT_INDEX_KEY, selectedPage);
-        return args;
-    }
+    private MapContainerPagerAdapter adapter;
 
     @Nullable
     @Override
@@ -48,15 +49,32 @@ public class MapContainerFragment extends Fragment implements IMapView {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(view);
-        String[] titles = new String[]{getString(R.string.fragment_title_map),
-                getString(R.string.fragment_title_marker_list)};
-        fragmentAdapter = new MapContainerPagerAdapter(getFragmentManager(), titles);
-        viewPager.setAdapter(fragmentAdapter);
+        initialDagger();
+        adapter = new MapContainerPagerAdapter(getFragmentManager(), fragmentTitles);
+        viewPager.setAdapter(adapter);
         presenter.initViewPager(viewPager);
     }
 
     @Override
     public void setItem(int position) {
         viewPager.setCurrentItem(position);
+    }
+
+    private void initialDagger() {
+        if (getActivity() == null && !(getActivity() instanceof BaseActivity)) {
+            return;
+        }
+
+        BaseActivity activity = (BaseActivity) getActivity();
+
+        if (activity.getActivityComponent() != null && activity.getActivityComponent() instanceof MainActivityComponent) {
+            MainActivityComponent activityComponent = activity.getActivityComponent();
+            component = activityComponent.plus(new MapModule(this));
+            component.inject(this);
+        }
+    }
+
+    public MapComponent getComponent() {
+        return component;
     }
 }

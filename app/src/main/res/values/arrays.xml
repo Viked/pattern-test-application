@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="fragment_map_container_titles">
+        <item>@string/fragment_title_map</item>
+        <item>@string/fragment_title_marker_list</item>
+    </string-array>
+</resources>

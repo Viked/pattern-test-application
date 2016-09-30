@@ -56,31 +56,7 @@ public class DecoratorSettings {
         return out;
     }
 
-    private static List<DecoratorItemSettings> getDefaultList() {
-        List<DecoratorItemSettings> out = new ArrayList<>();
-        out.add(new DecoratorItemSettings( true,
-                DecoratorConstants.MAIN_WEATHER_ID,
-                R.string.decorator_title_weather));
-        out.add(new DecoratorItemSettings(true,
-                DecoratorConstants.TEMPERATURE_ID,
-                R.string.decorator_title_current_temperature));
-        out.add(new DecoratorItemSettings(true,
-                DecoratorConstants.HUMIDITY_ID,
-                R.string.decorator_title_humidity));
-        out.add(new DecoratorItemSettings( false,
-                DecoratorConstants.COUNTRY_NAME_ID,
-                R.string.decorator_title_country_name));
-        out.add(new DecoratorItemSettings( false,
-                DecoratorConstants.LOCATION_NAME_ID,
-                R.string.decorator_title_location_name));
-        out.add(new DecoratorItemSettings( false,
-                DecoratorConstants.PRESSURE_ID,
-                R.string.decorator_title_pressure));
-        out.add(new DecoratorItemSettings( false,
-                DecoratorConstants.DESCRIPTION_WEATHER_ID,
-                R.string.decorator_title_weather_description));
-        return out;
-    }
+
 
 
 }

@@ -2,6 +2,8 @@ package viked.weathermap.dagger.ui.main;
 
 import dagger.Subcomponent;
 import viked.weathermap.dagger.ActivityScope;
+import viked.weathermap.dagger.ui.map.MapComponent;
+import viked.weathermap.dagger.ui.map.MapModule;
 import viked.weathermap.ui.main.view.MainActivity;
 
 /**
@@ -10,5 +12,6 @@ import viked.weathermap.ui.main.view.MainActivity;
 @ActivityScope
 @Subcomponent(modules = MainActivityModule.class)
 public interface MainActivityComponent {
+    MapComponent plus(MapModule mapModule);
     void inject(MainActivity activity);
 }

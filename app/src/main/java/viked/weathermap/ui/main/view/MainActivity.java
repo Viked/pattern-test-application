@@ -25,7 +25,9 @@ import viked.weathermap.dagger.ui.main.MainActivityComponent;
 import viked.weathermap.dagger.ui.main.MainActivityModule;
 import viked.weathermap.ui.main.presenter.IMainActivityPresenter;
 
-public class MainActivity extends BaseActivity implements IMainView, NavigationView.OnNavigationItemSelectedListener {
+import static viked.weathermap.constants.MapFragmentConstants.MAP_CONTAINER_MENU_IDS;
+
+public class MainActivity extends BaseActivity implements IMainView, NavigationView.OnNavigationItemSelectedListener, TabLayout.OnTabSelectedListener {
 
     //open weather api key d45545a62ad42fe8a840303b8600c6d8
 
@@ -110,6 +112,7 @@ public class MainActivity extends BaseActivity implements IMainView, NavigationV
     public void setupViewPager(ViewPager viewPager) {
         tabLayout.setVisibility(viewPager != null ? View.VISIBLE : View.GONE);
         tabLayout.setupWithViewPager(viewPager);
+        tabLayout.addOnTabSelectedListener(this);
     }
 
     @Override
@@ -126,5 +129,20 @@ public class MainActivity extends BaseActivity implements IMainView, NavigationV
     @Override
     public MainActivityComponent getActivityComponent() {
         return component;
+    }
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        navigationView.setCheckedItem(MAP_CONTAINER_MENU_IDS[tab.getPosition()]);
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+
     }
 }
